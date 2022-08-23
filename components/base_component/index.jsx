@@ -1,4 +1,5 @@
 import BadgeComponent from './BadgeComponent';
+import BreadcumbComponent from './BreadcumbComponent';
 import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
 import IcomoonComponent from './IcomoonComponent';
@@ -23,6 +24,9 @@ import MenuBarComponent from './MenuBarComponent';
 import NoSSR from './NoSSR';
 import TableComponent from './TableComponent';
 import ValidateComponent from './ValidateComponent';
+import ModalConfirmComponent from './ModalConfirmComponent';
+import ModalRightComponent from './ModalRightComponent';
+import WizardComponent from './WizardComponent';
 
 export {
   BadgeComponent,
@@ -49,5 +53,9 @@ export {
   SelectMultipleComponent,
   TableComponent,
   ValidateComponent,
-  InputStatusComponent
+  InputStatusComponent,
+  BreadcumbComponent,
+  ModalConfirmComponent,
+  ModalRightComponent,
+  WizardComponent
 };

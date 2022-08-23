@@ -6,6 +6,11 @@ import React, {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ValidateComponent } from '../';
+import PropTypes from 'prop-types'
+
+InputDefaultComponent.propTypes = {
+  name: PropTypes.string
+};
 
 export default function InputDefaultComponent({
   type,

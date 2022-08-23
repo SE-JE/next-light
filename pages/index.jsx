@@ -7,9 +7,20 @@ const Index = () => {
     <div className='container mx-auto'>
       <h1 className="my-8">HELLO WORLD!</h1>
 
-      <Link href="/component">
-        <ButtonComponent label="Cek Input Component" bg={"primary"} />
-      </Link>
+      <div className='flex gap-5'>
+        <Link href="/component">
+          <ButtonComponent label="Cek Input Component" bg={"primary"} />
+        </Link>
+
+        <Link href="/button-component">
+          <ButtonComponent label="Cek Button Component" bg={"primary"} />
+        </Link>
+
+        <Link href="/other-component">
+          <ButtonComponent label="Cek Other Component" bg={"primary"} />
+        </Link>
+      </div>
+
     </div>
   );
 }
