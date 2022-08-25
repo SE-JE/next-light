@@ -67,6 +67,24 @@ npm install && npm run dev
 - Navbar
 - Sidebar Components
 
+## Helpers API Available
+
+### AUTH
+- login
+- check login
+- logout
+
+### CRUD
+- get
+- post
+- put 
+- delete
+- download
+
+## Encryption
+- Encrypt
+- Decrypt
+
 ## Package Dependencies
 
 - fontawesome
