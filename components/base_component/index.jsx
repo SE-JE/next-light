@@ -27,6 +27,8 @@ import ValidateComponent from './ValidateComponent';
 import ModalConfirmComponent from './ModalConfirmComponent';
 import ModalRightComponent from './ModalRightComponent';
 import WizardComponent from './WizardComponent';
+import SidebarComponent from './SidebarComponent';
+import NavbarComponent from './NavbarComponent';
 
 export {
   BadgeComponent,
@@ -57,5 +59,7 @@ export {
   BreadcumbComponent,
   ModalConfirmComponent,
   ModalRightComponent,
-  WizardComponent
+  WizardComponent,
+  SidebarComponent,
+  NavbarComponent
 };

@@ -19,6 +19,10 @@ const Index = () => {
         <Link href="/other-component">
           <ButtonComponent label="Cek Other Component" bg={"primary"} />
         </Link>
+
+        <Link href="/sidebar">
+          <ButtonComponent label="Cek Sidebar" bg={"primary"} />
+        </Link>
       </div>
 
     </div>

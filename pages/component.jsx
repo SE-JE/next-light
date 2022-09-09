@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckBoxComponent, InputButtonComponent, InputCountComponent, InputDateComponent, InputDefaultComponent, InputEditorComponent, InputMultipleDateComponent, InputPhoneComponent, InputStarComponent, InputStatusComponent, RadioComponent, SelectComponent, SelectMultipleComponent } from '../components/base_component';
+import { CheckBoxComponent, InputButtonComponent, InputCountComponent, InputDateComponent, InputDefaultComponent, InputEditorComponent, InputMultipleDateComponent, InputOtpComponent, InputPhoneComponent, InputStarComponent, InputStatusComponent, RadioComponent, SelectComponent, SelectMultipleComponent } from '../components/base_component';
 import { faArrowTrendDown, faCalendarCheck, faList, faPhone, faUser } from '@fortawesome/free-solid-svg-icons';
 
 const Component = () => {
@@ -169,13 +169,12 @@ const Component = () => {
                 label="Input star"
             />
 
-            <div className="col-span-3 h-[500px] mt-5">
+            <div className="col-span-3 mt-5 mb-5">
                 <InputEditorComponent
                     placeholder={"Text Editor"}
                     name="editor"
                 />
             </div>
-
         </div>
     );
 }
