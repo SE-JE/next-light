@@ -121,7 +121,7 @@ export default function SidebarComponent({
 												}
 											}
 										}}>
-											<h6 className="text-lg font-semibold text-gray-500 dark:text-gray-300">
+											<h6 className="text-lg text-gray-500 dark:text-gray-300">
 												{menu_head.head}
 											</h6>
 											{menu_head.collapse && (
@@ -204,7 +204,7 @@ export default function SidebarComponent({
 																	icon={menu.icon}
 																	className="text-lg"
 																/>
-																<h6 className="font-semibold">{menu.label}</h6>
+																<h6 className="">{menu.label}</h6>
 															</div>
 
 															{menu.submenu && menu.submenu[0] && (
