@@ -26,6 +26,7 @@ import TableComponent from './TableComponent';
 import ValidateComponent from './ValidateComponent';
 import ModalConfirmComponent from './modal/ModalConfirmComponent';
 import ModalRightComponent from './modal/ModalRightComponent';
+import ModalComponent from './modal/ModalComponent';
 import WizardComponent from './navigasi/WizardComponent';
 import SidebarComponent from './layout/SidebarComponent';
 import NavbarComponent from './layout/NavbarComponent';
@@ -60,6 +61,7 @@ export {
   BreadcumbComponent,
   ModalConfirmComponent,
   ModalRightComponent,
+  ModalComponent,
   WizardComponent,
   SidebarComponent,
   NavbarComponent,

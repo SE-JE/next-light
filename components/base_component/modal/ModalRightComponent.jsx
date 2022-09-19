@@ -6,16 +6,18 @@ import React, {
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { LoadingComponent, ModalConfirmComponent } from '../';
+import { LoadingComponent, ModalConfirmComponent, ButtonComponent } from '../';
 
 export default function ModalRightComponent({
   children,
   show,
   onClose,
   title,
+  subTitle,
   loading,
   width,
-  onCloseConfirmation
+  onCloseConfirmation,
+  footer
 }) {
   const [isLoading, setisLoading] = useState(true);
   const [closeConfirmation, setCloseConfirmation] = useState(false);
@@ -42,23 +44,36 @@ export default function ModalRightComponent({
 
       <div
         className={`fixed top-0 ${show ? "right-0" : `-right-[100%]`
-          } h-screen bg-white z-50 rounded-l-3xl border-l-8 border__secondary shadow-[-4px_0px_10px_-4px_rgba(0,0,0,0.35)]`}
+          } h-screen bg-white z-50 rounded-l-3xl border-l-4 border__secondary shadow-[-4px_0px_10px_-4px_rgba(0,0,0,0.35)]`}
         style={{
           width: width ? width : "40%"
         }}
       >
-        <div className="flex items-center justify-between px-6 py-4 shadow rounded-b-xl">
-          <h3 className="text-lg font-semibold text__secondary">{title}</h3>
-          <div className="p-3 cursor-pointer" onClick={() => onCloseConfirmation ? setCloseConfirmation(true) : onClose()}>
-            <FontAwesomeIcon icon={faTimes} className="text__danger" />
+        <div className='flex justify-between items-center gap-8 px-8 py-6'>
+          <div>
+            <h6 className='text-xl font-semibold text-gray-600'>{title}</h6>
+            <p className='text-md text-gray-400 leading-4 mt-1'>{subTitle}</p>
           </div>
+
+          <ButtonComponent
+            icon={faTimes}
+            color="gray"
+            square
+            onClick={() => onClose()}
+          />
         </div>
 
         <div
-          className={`max-h-[calc(100vh-75px)] overflow-y-auto scroll_control`}
+          className={`max-h-[calc(100vh-75px)] overflow-y-auto scroll_control px-8`}
         >
           {children}
         </div>
+
+        {footer && (
+          <div className='px-8 py-4 bg__background rounded-b-xl absolute bottom-0 w-full'>
+            {footer}
+          </div>
+        )}
       </div>
 
       {loading && (

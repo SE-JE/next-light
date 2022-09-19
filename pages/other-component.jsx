@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { BadgeComponent, BreadcumbComponent, ButtonComponent, CardComponent, MenuBarComponent, ModalConfirmComponent, ModalRightComponent, WizardComponent } from '../components/base_component';
+import { BadgeComponent, BreadcumbComponent, ButtonComponent, CardComponent, CheckBoxComponent, MenuBarComponent, ModalComponent, ModalConfirmComponent, ModalRightComponent, WizardComponent } from '../components/base_component';
 
 const OtherComponent = () => {
     const [confirm, setConfirm] = useState(false);
     const [menu, setMenu] = useState("Menu 1");
     const [modalRight, setModalRight] = useState(false);
+    const [modal, setModal] = useState(false);
 
     return (
         <>
@@ -92,6 +93,37 @@ const OtherComponent = () => {
 
             <div className='container mx-auto items-center flex flex-wrap my-5 gap-5'>
                 <ButtonComponent
+                    label={"Modal"}
+                    bg="primary"
+                    onClick={() => setModal(true)}
+                    rounded
+                />
+
+                <ModalComponent
+                    show={modal}
+                    title={"Title Modal"}
+                    subTitle={"Lorem ipsum dolor sit amet consectetur adipisicing elit."}
+                    onClose={() => setModal(false)}
+                    footer={(
+                        <div className='flex justify-end gap-4'>
+                            <ButtonComponent
+                                label={"Cancel"}
+                                color="danger"
+                                size={"sm"}
+                            />
+                            <ButtonComponent
+                                label={"Yes, Do it!"}
+                                bg="primary"
+                                size={"sm"}
+                            />
+                        </div>
+                    )}
+                >
+                    <p className='text-lg leading-6 mb-6'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam neque non illo iusto quis. Nobis, fuga quidem. Reiciendis corporis ut praesentium, nam at dolorum aliquid eum nisi quam, nihil fugit.</p>
+                    <CheckBoxComponent label={"Accept all rules!"} />
+                </ModalComponent>
+
+                <ButtonComponent
                     label={"Modal Confirm"}
                     bg="primary"
                     onClick={() => setConfirm(true)}
@@ -103,7 +135,7 @@ const OtherComponent = () => {
                     onClose={() => setConfirm(false)}
                     onSubmit={() => setConfirm(false)}
                 >
-                    <p>This modal for confirmation!</p>
+                    <p className='text-lg leading-6 mb-6 text-center'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam neque non illo iusto quis.</p>
                 </ModalConfirmComponent>
 
                 <ButtonComponent
@@ -116,9 +148,31 @@ const OtherComponent = () => {
                 <ModalRightComponent
                     show={modalRight}
                     title={"Right Modal"}
+                    subTitle={"Lorem ipsum dolor sit amet consectetur adipisicing elit."}
                     onClose={() => setModalRight(false)}
                     width={"50%"}
-                />
+                    footer={(
+                        <div className='flex justify-end gap-4'>
+                            <ButtonComponent
+                                label={"Cancel"}
+                                color="danger"
+                                size={"sm"}
+                        />
+                            <ButtonComponent
+                                label={"Yes, Do it!"}
+                                bg="primary"
+                                size={"sm"}
+                            />
+                        </div>
+                    )}
+                >
+                    <p className='text-lg leading-6 mb-4'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam neque non illo iusto quis. Nobis, fuga quidem. Reiciendis corporis ut praesentium, nam at dolorum aliquid eum nisi quam, nihil fugit.</p>
+                    <p className='text-lg leading-6 mb-4'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam neque non illo iusto quis. Nobis, fuga quidem. Reiciendis corporis ut praesentium, nam at dolorum aliquid eum nisi quam, nihil fugit.</p>
+                    <p className='text-lg leading-6 mb-4'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam neque non illo iusto quis. Nobis, fuga quidem. Reiciendis corporis ut praesentium, nam at dolorum aliquid eum nisi quam, nihil fugit.</p>
+                    <p className='text-lg leading-6 mb-4'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam neque non illo iusto quis. Nobis, fuga quidem. Reiciendis corporis ut praesentium, nam at dolorum aliquid eum nisi quam, nihil fugit.</p>
+                    <p className='text-lg leading-6 mb-8'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam neque non illo iusto quis. Nobis, fuga quidem. Reiciendis corporis ut praesentium, nam at dolorum aliquid eum nisi quam, nihil fugit.</p>
+                    <CheckBoxComponent label={"Accept all rules!"} />
+                </ModalRightComponent>
             </div>
         </>
     );

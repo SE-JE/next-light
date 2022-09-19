@@ -222,7 +222,7 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .cover__checkbox__control .checkbox__control:after {
-	left: 10px;
+	left: 8px;
 	top: 4px;
 	width: 7px;
 	height: 11px;

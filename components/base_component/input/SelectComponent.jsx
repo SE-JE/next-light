@@ -145,6 +145,11 @@ export default function SelectComponent({
           onFocus={(e) => {
             setFocus(true);
             setShowSuggestions(true);
+
+            if (searchable) {
+              e.target.select()
+            }
+
             if (!searchServer) {
               filterSuggestion(e);
             }
@@ -241,9 +246,9 @@ export default function SelectComponent({
                   absolute suggestions left-0 mt-10 rounded-xl w-full bg-white shadow text-left z-30 overflow-hidden py-3 ease-in-out 
                   ${focus ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0"}
               `}
-              style={{
-                maxWidth: `calc(100% - ${icon ? "7.5rem" : "5.5rem"})`
-              }}
+            // style={{
+            //   maxWidth: `calc(100% - ${icon ? "7.5rem" : "5.5rem"})`
+            // }}
             >
               <ul
                 className='overflow-x-hidden overflow-y-auto my__scroll_no_shadow'

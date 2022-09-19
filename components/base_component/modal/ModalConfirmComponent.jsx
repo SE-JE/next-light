@@ -51,6 +51,7 @@ function ModalConfirmComponent({
         className={`
           fixed left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 z-50 max-w-lg rounded-xl shadow-lg
           ${show ? "top-1/2 opacity-1" : "top-[150%] opacity-0"}
+          border-b-4 border__${bg ? bg : "danger"}
         `}
         style={{
           minWidth: "400px",
@@ -59,13 +60,11 @@ function ModalConfirmComponent({
         <h3 className={`mb-5 text-xl font-bold text-center text__${color ? color : "danger"}`}>
           {title ? title : "Are you sure?"}
         </h3>
-        <p className='text-lg font-medium text-center text-gray-600'>
-          {children}
 
-        </p>
+        {children}
+
         {!noAction && (
           <div className='flex justify-center gap-4 mt-7'>
-
             <ButtonComponent
               icon={faTimes}
               bg='danger'
