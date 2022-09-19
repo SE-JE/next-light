@@ -3,9 +3,6 @@ import React from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import IcomoonComponent from './IcomoonComponent';
-
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function ButtonComponent({
   type,

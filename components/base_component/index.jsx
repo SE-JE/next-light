@@ -3,7 +3,6 @@ import ShadowScrollComponent from './ShadowScrollComponent';
 import BreadcumbComponent from './BreadcumbComponent';
 import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
-import IcomoonComponent from './IcomoonComponent';
 import CheckBoxComponent from './input/CheckBoxComponent';
 import InputButtonComponent from './input/InputButtonComponent';
 import InputCheckboxGroupComponent from './input/InputCheckboxGroupComponent';
@@ -36,7 +35,6 @@ export {
   ButtonComponent,
   CardComponent,
   CheckBoxComponent,
-  IcomoonComponent,
   InputButtonComponent,
   InputCheckboxGroupComponent,
   InputCountComponent,

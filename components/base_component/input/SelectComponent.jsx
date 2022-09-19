@@ -8,7 +8,6 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ValidateComponent } from '../';
-import IcomoonComponent from '../IcomoonComponent';
 
 export default function SelectComponent({
   placeholder,

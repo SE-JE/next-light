@@ -8,7 +8,6 @@ import Calendar from 'react-calendar';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import IcomoonComponent from '../IcomoonComponent';
 import ValidateComponent from '../ValidateComponent';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 
