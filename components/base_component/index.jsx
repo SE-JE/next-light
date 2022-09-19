@@ -1,4 +1,5 @@
 import BadgeComponent from './BadgeComponent';
+import ShadowScrollComponent from './ShadowScrollComponent';
 import BreadcumbComponent from './BreadcumbComponent';
 import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
@@ -61,5 +62,6 @@ export {
   ModalRightComponent,
   WizardComponent,
   SidebarComponent,
-  NavbarComponent
+  NavbarComponent,
+  ShadowScrollComponent
 };

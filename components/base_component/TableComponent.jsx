@@ -5,52 +5,53 @@ import React, {
 } from 'react';
 
 import {
+  faArrowAltCircleUp,
+  faArrowDown,
+  faArrowDownShortWide,
+  faArrowUpShortWide,
+  faChevronDown,
   faChevronLeft,
   faChevronRight,
   faEllipsis,
+  faEllipsisH,
   faList,
   faMagnifyingGlass,
+  faPlus,
+  faSearch,
   faSort,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import InputDefaultComponent from './input/InputDefaultComponent';
+import ButtonComponent from './ButtonComponent';
+import ShadowScrollComponent from './ShadowScrollComponent';
 
-export default function TableComponent({
+export default function TableResponsiveComponent({
   columns,
-  dataset,
-  header,
-  onSearch,
+  data,
+  onChangeSearch,
   setSearch,
-  onSort,
+  searchColumn,
+  onChangeSearchColumn,
+  setSearchColumn,
+  onChangeSort,
   setSort,
-  totalRows,
-  changePerpage,
-  changePage,
-  leftActions,
-  rightActions,
-  isLoading,
-  noData,
-  width,
-  selectRows,
-  clearSelectRow,
-  onSelectRows,
-  onClickSelected,
-  filter,
-  noId,
-  tabFilter,
-  setPerpage,
+  setTotalRow,
+  onChangePaginate,
+  setPaginate,
+  onChangePage,
   setPage,
+  setLoading,
+  width,
+  // tabFilter,
   noSearch,
-  bottomView
+  topBar,
 }) {
-  // const [selected, setSelected] = useState([]);
-  // const [countSelected, setCountSelected] = useState(0);
-  // const [clearSelected, setClearSelected] = useState(false);
   const [menuSort, setMenuSort] = useState(false);
   const [columnSelector, setColumnSelector] = useState([]);
   const [floatingAction, setFloatingAction] = useState(true);
   const [floatingPerpage, setFloatingPerpage] = useState(false);
+  const [floatingSearchColumn, setFloatingSearchColumn] = useState(false);
   const [floatingActionActive, setFloatingActionActive] = useState(-1);
   const [pagination, setPagination] = useState({
     first: false,
@@ -59,19 +60,6 @@ export default function TableComponent({
   });
   const [inputSearch, setInputSearch] = useState("");
   const [doSearch, setDoSearch] = useState("");
-
-  // useEffect(() => {
-  //   setClearSelected(true);
-  //   setSelected([]);
-  //   setCountSelected(0);
-  // }, [clearSelectRow]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     setClearSelected(false);
-  //   }
-  // });
 
   useEffect(() => {
     let newSeletor = [];
@@ -84,9 +72,9 @@ export default function TableComponent({
   }, [columns]);
 
   useEffect(() => {
-    if (totalRows > setPerpage) {
+    if (setTotalRow > setPaginate) {
       let newPages = [];
-      let lastPage = Math.ceil(totalRows / setPerpage);
+      let lastPage = Math.ceil(setTotalRow / setPaginate);
 
       if (setPage > 1 && setPage < lastPage) {
         if (setPage > 2) {
@@ -120,108 +108,197 @@ export default function TableComponent({
         lastPage: 1,
       });
     }
-  }, [setPage, totalRows, setPerpage, setSearch]);
+  }, [setPage, setTotalRow, setPaginate, setSearch]);
 
   useEffect(() => {
-    if (inputSearch != null) {
+    if (setInputSearch != null) {
       const delaySearch = setTimeout(() => {
-        if (changePage) {
-          changePage(1);
+        if (onChangePage) {
+          onChangePage(1);
         }
 
         setDoSearch(!doSearch);
       }, 1000);
       return () => clearTimeout(delaySearch);
     }
-  }, [inputSearch]);
+  }, [setInputSearch]);
 
   useEffect(() => {
-    if (onSearch) {
-      onSearch(inputSearch);
+    if (onChangeSearch) {
+      onChangeSearch(inputSearch);
     }
   }, [doSearch]);
 
   return (
     <div className='pb-5'>
-      {tabFilter && (
-        <div className='flex'>
-          <div className='bg-white text__primary shadow-[0_-2px_5px_-3px_rgba(0,0,0,0.35)] px-6 pt-4 pb-10 -mb-6 flex items-center gap-4 rounded-t-xl'>
-            <FontAwesomeIcon icon={faList} className={"text-lg"} />
-            <h6>Semua</h6>
+      <div className=''>
+        {topBar && (
+          <div className='p-3 rounded-xl bg-white shadow-sm'>
+            {topBar}
           </div>
-          <div className='flex items-center gap-4 px-6 py-4 text-gray-700 rounded-t-xl'>
-            <FontAwesomeIcon icon={faList} className={"text-lg"} />
-            <h6>Success</h6>
-          </div>
-        </div>
-      )}
+        )}
 
-      <div className='bg-white shadow-md min-h-[calc(100%-7.5rem)] rounded-xl'>
-        <div className='flex items-center justify-between p-5'>
-          {leftActions}
-          {!noSearch && (
-            <div className='w-1/3'>
-              <InputDefaultComponent
-                name={"search"}
-                size={"sm"}
-                placeholder={"Search Data"}
-                icon={faMagnifyingGlass}
-                iconLeft
-                setInputValue={setSearch}
-                onChange={(e) => setInputSearch(e)}
-                className={`${isLoading ? "skeleton-loading" : ""}`}
+        <div className='flex items-center justify-between my-4'>
+          <div className='relative z-20'>
+            <input
+              id='tablePage'
+              onFocus={() => setFloatingPerpage(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  setFloatingPerpage(false);
+                }, 100);
+              }}
+              className='pl-4 pr-12 py-3 w-24 text-md font-semibold rounded-md border-b border-gray-300 focus:shadow-inner'
+              value={setPaginate}
+              readOnly={"readonly"}
+            />
+            <label htmlFor="tablePage">
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className="absolute top-1/2 -translate-y-1/2 right-4 text-lg cursor-pointer"
               />
+            </label>
+
+            <div
+              className={`absolute top-full right-1/2 translate-x-1/2 bg-white shadow-md rounded-lg py-2 ${!floatingPerpage ? "scale-0" : "scale-100"
+                }`}>
+              {[10, 20, 30, 50, 100].map((data, key) => {
+                return (
+                  <div
+                    key={key}
+                    className={`px-4 py-3 w-24 cursor-pointer hover__bg__light__primary ${setPaginate == data ? "bg__light__primary text__primary" : ""}`}
+                    // onClick={() => onChangePaginate(data)}
+                    onMouseDown={() => {
+                      setTimeout(() => {
+                        setFloatingPerpage(true);
+                      }, 110);
+
+                      onChangePaginate(data)
+                    }}
+
+                    onMouseUp={() => {
+                      setTimeout(() => {
+                        setFloatingPerpage(false);
+                      }, 120);
+
+                      onChangePaginate(data)
+                    }}
+                  >
+                    {data}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {!noSearch && (
+            <div className='flex w-1/2 lg:w-1/4'>
+              {searchColumn && (
+                <div className='relative z-20 border-r border-gray-300'>
+                  <input
+                    id='tableSearchColumn'
+                    onFocus={() => setFloatingSearchColumn(true)}
+                    onBlur={() => {
+                      setTimeout(() => {
+                        setFloatingSearchColumn(false);
+                      }, 100);
+                    }}
+                    className='pl-4 pr-12 py-3 text-md w-32 font-semibold rounded-l-md border-b border-gray-300'
+                    value={setSearchColumn?.label ? setSearchColumn?.label : "All"}
+                    readOnly={"readonly"}
+                  />
+                  <label htmlFor="tableSearchColumn">
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className="absolute top-1/2 -translate-y-1/2 right-4 text-lg cursor-pointer"
+                    />
+                  </label>
+
+                  <div
+                    className={`absolute top-full right-1/2 translate-x-1/2 bg-white shadow-md rounded-lg py-2 ${!floatingSearchColumn ? "scale-0" : "scale-100"
+                      }`}>
+                    <div
+                      className={`px-4 py-3 w-32 cursor-pointer hover__bg__light__primary ${!setSearchColumn?.selector ? "bg__light__primary text__primary" : ""}`}
+                      onMouseDown={() => {
+                        setTimeout(() => {
+                          setFloatingSearchColumn(true);
+                        }, 110);
+
+                        onChangeSearchColumn(null)
+                      }}
+
+                      onMouseUp={() => {
+                        setTimeout(() => {
+                          setFloatingSearchColumn(false);
+                        }, 120);
+
+                        onChangeSearchColumn(null)
+                      }}
+                    >
+                      All
+                    </div>
+                    {columns.map((data, key) => {
+                      return (
+                        <div
+                          key={key}
+                          className={`px-4 py-3 w-32 cursor-pointer hover__bg__light__primary ${setSearchColumn?.selector == data.selector ? "bg__light__primary text__primary" : ""}`}
+                          onMouseDown={() => {
+                            setTimeout(() => {
+                              setFloatingSearchColumn(true);
+                            }, 110);
+
+                            onChangeSearchColumn(data)
+                          }}
+
+                          onMouseUp={() => {
+                            setTimeout(() => {
+                              setFloatingSearchColumn(false);
+                            }, 120);
+
+                            onChangeSearchColumn(data)
+                          }}
+                        >
+                          {data.label}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <div className='relative w-full'>
+                <input type="text"
+                  name={"search"}
+                  placeholder={"Search Data..."}
+                  value={setSearch}
+                  onChange={(e) => setInputSearch(e.target.value)}
+                  className={`${setLoading ? "skeleton-loading" : ""} py-3 pl-4 pr-12 w-full font-semibold text-md ${searchColumn ? "rounded-r-lg" : "rounded-lg"} bg-white border-b border-gray-300`}
+                  autoComplete={"off"}
+                />
+
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className="absolute top-1/2 -translate-y-1/2 right-4 text-lg"
+                />
+              </div>
             </div>
           )}
         </div>
 
-        <div className='relative w-full overflow-x-hidden'>
-          <div
-            className='w-full overflow-auto scroll_control shadow__scrollx'
+        <div className='relative w-full'>
+          <ShadowScrollComponent
+            className={'w-full py-4 overflow-x-auto scroll_control'}
             onScroll={(e) =>
               setFloatingAction(
                 e.target.scrollLeft + e.target.offsetWidth <=
-                  e.target.scrollWidth - 120
+                e.target.scrollWidth - 500
               )
             }>
-            {isLoading ? (
-              <table
-                cellPadding='0'
-                cellSpacing='0'
-                // width={width ? width : "180%"}
-                className={`w3samples_table_loader w-[${
-                  width ? width : "100%"
-                }]`}>
-                <tr className='row_head'>
-                  <th className='col1'>
-                    <span></span>
-                  </th>
-                  <th className='col4'>
-                    <span></span>
-                  </th>
-                  <th className='col5'>
-                    <span></span>
-                  </th>
-                </tr>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, key) => {
-                  return (
-                    <tr className='table_row' key={key}>
-                      <td className='col1'>
-                        <span></span>
-                      </td>
-                      <td className='col4'>
-                        <span></span>
-                      </td>
-                      <td className='col5'>
-                        <span></span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </table>
+            {setLoading ? (
+              <></>
             ) : (
               <>
-                {noData ? (
+                  {!data || !data[0] ? (
                   <div className='flex justify-center p-5'>
                     <img
                       src='/images/no-data.svg'
@@ -230,131 +307,123 @@ export default function TableComponent({
                     />
                   </div>
                 ) : (
-                  <table
-                    width={width ? width : "100%"}
-                    className={`table-auto w-[${width ? width : "100%"}]`}>
-                    <thead className='px-3 font-bold text-white bg__light__secondary'>
-                      <tr>
-                        <th
-                          width={"60px"}
-                          className='px-5 py-4 font-bold text-center'>
-                          #
-                        </th>
-                        {columns.map((column, key) => {
-                          return (
-                            <th
-                              width={column.width ? column.width : "auto"}
-                              key={key}
-                              className={`py-6 px-5 font-bold text-left cursor-pointer ${
-                                setSort && setSort.column == column.selector
-                                  ? "text__secondary"
-                                  : ""
-                              }`}
-                              onClick={(e) => {
-                                if (
-                                  setSort &&
-                                  setSort.column == column.selector
-                                ) {
-                                  onSort({
-                                    column: column.selector,
-                                    direction:
-                                      setSort.direction == "desc"
-                                        ? "asc"
-                                        : "desc",
-                                  });
-                                } else {
-                                  onSort({
-                                    column: column.selector,
-                                    direction: "desc",
-                                  });
-                                }
-                              }}>
-                              {column.label}
-                              {setSort && setSort.column == column.selector && (
-                                <FontAwesomeIcon
-                                  icon={faSort}
-                                  className='ml-3'
-                                />
-                              )}
-                            </th>
-                          );
-                        })}
-                        <th className='table-column px-5 py-4 font-bold'></th>
-                      </tr>
-                    </thead>
-                    <tbody className='px-3 font-medium'>
-                      {dataset.map((data, index) => {
-                        return (
-                          <tr className='border-b table_row' key={index}>
-                            <td
-                              width={"60px"}
-                              className='text-center table_cell'>
-                              {data["id"]}
-                            </td>
-                            {columnSelector.map((selector, key) => {
-                              return (
-                                <td
-                                  width={
-                                    selector.width ? selector.width : "auto"
-                                  }
-                                  className={`table_cell max-w-[100px]`}
-                                  key={key}>
-                                  {data[selector.key]}
-                                </td>
-                              );
-                            })}
-                            <td className='table_cell'>
-                              <div className='flex justify-end'>
-                                {data["action"]}
-                              </div>
-                            </td>
-                            {width != "100%" && data.action && (
+                      <div
+                        className='min-w-full'
+                        style={{
+                          width: width ? width : "max-content"
+                        }}
+                      >
+                        {
+                          // ? Head Column
+                        }
+                        <div className='flex gap-4 mb-2'>
+                          <div className="w-16 px-6 py-4 font-bold">
+                            #
+                          </div>
+                          {columns && columns.map((column, key) => {
+                            return (
                               <div
-                                className={`absolute flex items-center translate-y-1/3 ${
-                                  floatingAction ? "right-0" : "-right-100"
-                                } `}>
+                                key={key}
+                                className={`px-6 py-4 font-bold ${column.sortable ? "cursor-pointer" : ""}`}
+                                style={{
+                                  width: column.width ? column.width : "200px"
+                                }}
+                                onClick={() => {
+                                  if (column.sortable && onChangeSort) {
+                                    onChangeSort({
+                                      selector: column.selector,
+                                      direction: (!setSort || setSort.selector != column.selector) ? "desc" : setSort.direction == "desc" ? "asc" : "desc",
+                                    })
+                                  }
+                                }}
+                              >
+                                <div className='flex justify-between gap-2 items-center'>
+                              {column.label}
+
+                                  {(setSort && setSort.selector == column.selector) && (
+                                    <>
+                                      {setSort.direction == "desc" ? (
+                                        <FontAwesomeIcon icon={faArrowDownShortWide} className="text-lg" />
+                                      ) : (
+                                        <FontAwesomeIcon icon={faArrowUpShortWide} className="text-lg" />
+                                      )}
+                                    </>
+                                  )}
+
+                                </div>
+
+                              </div>
+                            )
+                          })}
+                        </div>
+
+                        {
+                          // ? Body Column
+                        }
+                        <div className='flex flex-col gap-y-2'>
+                          {(data && data[0]) && data.map((item, key) => {
+                        return (
+                          <div className='flex items-center gap-4 bg-white rounded-lg shadow-sm relative' key={key}>
+                            <div className="w-16 px-6 py-4 font-medium">
+                              {key + 1}
+                            </div>
+                            {columns && columns.map((column, key) => {
+                              return (
                                 <div
-                                  className='px-3 py-2 rounded-l-lg shadow cursor-pointer table_floating_action'
-                                  onClick={() =>
-                                    floatingActionActive == index
-                                      ? setFloatingActionActive(-1)
-                                      : setFloatingActionActive(index)
-                                  }>
-                                  <FontAwesomeIcon
-                                    icon={faEllipsis}
-                                    className='text-xl text-white'
-                                  />
+                                  key={key}
+                                  className="px-6 py-4 text-lg font-medium"
+                                  style={{
+                                    width: column.width ? column.width : "200px"
+                                  }}
+                                >
+                                  {item[column.selector] ? item[column.selector] : "-"}
+                                </div>
+                              )
+                            })}
+                            <div className="flex-1 flex justify-end gap-2 px-6 py-4">
+                              {item.action}
+                            </div>
+
+                            {floatingAction && (
+                              <div
+                                className='sticky hover:-right-2 bg__background -right-5 z-30 cursor-pointer flex shadow rounded-l-lg'
+                                onClick={() =>
+                                  floatingActionActive == key
+                                    ? setFloatingActionActive(-1)
+                                    : setFloatingActionActive(key)
+                                }>
+                                <div className=' pl-5 pr-7 py-5'>
+                                  <FontAwesomeIcon icon={floatingActionActive != key ? faChevronLeft : faChevronRight} className="text__primary" />
                                 </div>
 
                                 <div
-                                  className={`bg-white py-2 shadow rounded-l-md ${
-                                    floatingActionActive == index
-                                      ? "w-max px-2"
-                                      : "w-0"
-                                  }`}>
-                                  {data["action"]}
+                                  className={`py-2 flex gap-2 ${floatingActionActive == key
+                                    ? "w-max pl-2 pr-8"
+                                    : "w-0"
+                                    }`}>
+                                  {item.action}
                                 </div>
                               </div>
                             )}
-                            {data.extra}
-                          </tr>
-                        );
+
+                          </div>
+                        )
                       })}
-                    </tbody>
-                  </table>
+                        </div>
+                      </div>
                 )}
               </>
             )}
-          </div>
+          </ShadowScrollComponent>
         </div>
 
-        {totalRows ? (
-          <div className='flex items-center justify-between p-5'>
+        {setTotalRow && (
+          <div className='flex items-center justify-between p-4'>
             <div className='flex items-center gap-3'>
               {setPage > 1 && (
                 <div
                   className='p-3 text-gray-600 cursor-pointer'
-                  onClick={() => changePage(setPage - 1)}>
+                  onClick={() => onChangePage(setPage - 1)}>
                   <FontAwesomeIcon icon={faChevronLeft} />
                 </div>
               )}
@@ -362,8 +431,8 @@ export default function TableComponent({
               {pagination.first && (
                 <>
                   <div
-                    className='px-5 py-2 font-bold text-gray-600 bg-gray-200 rounded-md cursor-pointer'
-                    onClick={() => changePage(1)}>
+                    className='px-5 py-2 font-bold bg-white rounded-md cursor-pointer hover:scale-110'
+                    onClick={() => onChangePage(1)}>
                     1
                   </div>
                   <div className='px-2 py-2 font-bold text-gray-600 rounded-md'>
@@ -376,12 +445,11 @@ export default function TableComponent({
                   return (
                     <div
                       key={key}
-                      className={`py-2 px-5 rounded-md font-bold ${
-                        page == setPage
-                          ? "bg__light__primary text__primary"
-                          : "bg-gray-200 text-gray-600 cursor-pointer"
-                      }`}
-                      onClick={() => changePage(page)}>
+                      className={`py-2 px-5 rounded-md font-bold ${page == setPage
+                        ? "bg__light__primary text__primary"
+                        : "bg-white cursor-pointer"
+                        } hover:scale-110`}
+                      onClick={() => onChangePage(page)}>
                       {page}
                     </div>
                   );
@@ -392,8 +460,8 @@ export default function TableComponent({
                     ...
                   </div>
                   <div
-                    className='px-5 py-2 font-bold text-gray-600 bg-gray-200 rounded-md cursor-pointer'
-                    onClick={() => changePage(pagination.last)}>
+                    className='px-5 py-2 font-bold bg-white rounded-md cursor-pointer hover:scale-110'
+                    onClick={() => onChangePage(pagination.last)}>
                     {pagination.last}
                   </div>
                 </>
@@ -401,65 +469,25 @@ export default function TableComponent({
               {setPage < pagination.lastPage && (
                 <div
                   className='p-3 text-gray-600 cursor-pointer'
-                  onClick={() => changePage(setPage + 1)}>
+                  onClick={() => onChangePage(setPage + 1)}>
                   <FontAwesomeIcon icon={faChevronRight} />
                 </div>
               )}
             </div>
             <div className='relative flex items-center gap-5 px-3'>
               <div className='text-gray-600'>
-                {setPerpage * setPage - setPerpage + 1} -
+                {setPaginate * setPage - setPaginate + 1}
+                {" "} - {" "}
                 {setPage < pagination.lastPage
-                  ? setPerpage * setPage
-                  : totalRows}
-                dari {totalRows}
+                  ? setPaginate * setPage
+                  : setTotalRow}
+                {" "} dari {" "}
+                {setTotalRow}
               </div>
-              <input
-                htmlFor='perpage'
-                onFocus={() => setFloatingPerpage(true)}
-                onBlur={() => {
-                  setTimeout(() => {
-                    setFloatingPerpage(false);
-                  }, 100);
-                }}
-                className='w-20 px-6 py-2 font-bold text-gray-600 rounded-md max-w-max form__control'
-                value={setPerpage}
-              />
-              <div
-                className={`absolute top-0 right-1/2 translate-x-1/2 -translate-y-full bg-white shadow-md rounded-md py-2 ${
-                  !floatingPerpage ? "scale-0" : "scale-100"
-                }`}>
-                <div
-                  className='px-6 py-2 cursor-pointer hover:bg-gray-200'
-                  onClick={() => changePerpage(10)}>
-                  10
-                </div>
-                <div
-                  className='px-6 py-2 cursor-pointer hover:bg-gray-200'
-                  onClick={() => changePerpage(20)}>
-                  20
-                </div>
-                <div
-                  className='px-6 py-2 cursor-pointer hover:bg-gray-200'
-                  onClick={() => changePerpage(30)}>
-                  30
-                </div>
-                <div
-                  className='px-6 py-2 cursor-pointer hover:bg-gray-200'
-                  onClick={() => changePerpage(40)}>
-                  40
-                </div>
-                <div
-                  className='px-6 py-2 cursor-pointer hover:bg-gray-200'
-                  onClick={() => changePerpage(50)}>
-                  50
-                </div>
-              </div>
-              <div className='text-gray-600'>Per halaman</div>
+
+              {/* <div className='text-gray-600'>Per halaman</div> */}
             </div>
           </div>
-        ) : (
-            <div className='p-5'>{bottomView}</div>
         )}
       </div>
     </div>
