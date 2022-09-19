@@ -32,6 +32,7 @@ import SidebarComponent from './layout/SidebarComponent';
 import NavbarComponent from './layout/NavbarComponent';
 import BottomSheetComponent from './layout/BottomSheetComponent';
 import FloatingPageComponent from './layout/FloatingPageComponent';
+import FormPlusComponent from './crud/FormPlusComponent';
 
 export {
   BadgeComponent,
@@ -67,5 +68,6 @@ export {
   NavbarComponent,
   ShadowScrollComponent,
   BottomSheetComponent,
-  FloatingPageComponent
+  FloatingPageComponent,
+  FormPlusComponent
 };

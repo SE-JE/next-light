@@ -97,7 +97,7 @@ export default function InputPhoneComponent({
           placeholder={focus ? placeholder : ""}
           maxLength={validate && validate.max && validate.max}
           className={`
-            ${iconLeft ? "pl-20 pr-5" : icon ? "pl-10 pr-14" : "pl-5 pr-5"}
+            ${iconLeft ? "pl-20 pr-5" : icon ? "pl-10 pr-14" : "pl-10 pr-5"}
             ${invalid ? " invalid" : ""}
           `}
           name={name}

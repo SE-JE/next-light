@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 
 // import { useMediaQuery } from 'react-responsive';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { ValidateComponent } from '../';
@@ -218,6 +218,21 @@ export default function SelectComponent({
               if (onClick) {
                 onClick(e);
               }
+            }}
+          />
+        )}
+
+        {value && (
+          <FontAwesomeIcon
+            className={`
+              absolute right-20 text-xl text-gray-400
+              ${onClick && "cursor-pointer"} 
+              ${focus ? "text__primary" : ""}
+              ${invalid ? "text__danger" : ""}
+            `}
+            icon={faTimes}
+            onClick={(e) => {
+              setValue("")
             }}
           />
         )}

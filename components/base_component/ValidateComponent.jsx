@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { langValidate } from "../../lang/validate";
 
 function ValidateComponent({
   value,
@@ -10,7 +11,7 @@ function ValidateComponent({
   email,
   uppercase,
   lowercase,
-  oneNumeric,
+  numeric,
   phone,
   confirm,
   required,
@@ -29,49 +30,49 @@ function ValidateComponent({
 
     if (required) {
       newTooltip.push({
-        label: "Please fill in this field!",
+        label: langValidate.required,
         status: value ? true : false,
       });
     }
 
     if (min && max) {
       newTooltip.push({
-        label: "Field must be " + min + " - " + max + " Character!",
+        label: langValidate.min_max.replace(/@min/g, min).replace(/@max/g, max),
         status: value?.length >= min && value?.length <= max ? true : false,
       });
     }
 
     if (phone) {
       newTooltip.push({
-        label: "Please enter valid mobile number!",
+        label: langValidate.phone,
         status: value?.length >= 11 && value?.length <= 18 ? true : false,
       });
     }
 
     if (uppercase) {
       newTooltip.push({
-        label: "Field must be at least 1 uppercase!",
+        label: langValidate.uppercase,
         status: /[A-Z]/.test(value),
       });
     }
 
     if (lowercase) {
       newTooltip.push({
-        label: "Field must be at least 1 lowercase!",
+        label: langValidate.lowercase,
         status: /[a-z]/.test(value),
       });
     }
 
-    if (oneNumeric) {
+    if (numeric) {
       newTooltip.push({
-        label: "Field must be at least 1 numeric!",
+        label: langValidate.numeric,
         status: /[0-9]/.test(value),
       });
     }
 
     if (email) {
       newTooltip.push({
-        label: "Please enter valid email!",
+        label: langValidate.email,
         status:
           /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(
             value
@@ -81,7 +82,7 @@ function ValidateComponent({
 
     if (confirm) {
       newTooltip.push({
-        label: "Confirmation password not correctly!",
+        label: langValidate.password_confirm,
         status: confirm == value,
       });
     }
