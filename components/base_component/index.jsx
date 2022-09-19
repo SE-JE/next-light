@@ -1,6 +1,6 @@
 import BadgeComponent from './BadgeComponent';
 import ShadowScrollComponent from './ShadowScrollComponent';
-import BreadcumbComponent from './BreadcumbComponent';
+import BreadcumbComponent from './navigasi/BreadcumbComponent';
 import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
 import CheckBoxComponent from './input/CheckBoxComponent';
@@ -20,15 +20,17 @@ import RadioComponent from './input/RadioComponent';
 import SelectComponent from './input/SelectComponent';
 import SelectMultipleComponent from './input/SelectMultipleComponent';
 import LoadingComponent from './LoadingComponent';
-import MenuBarComponent from './MenuBarComponent';
+import MenuBarComponent from './navigasi/MenuBarComponent';
 import NoSSR from './NoSSR';
 import TableComponent from './TableComponent';
 import ValidateComponent from './ValidateComponent';
-import ModalConfirmComponent from './ModalConfirmComponent';
-import ModalRightComponent from './ModalRightComponent';
-import WizardComponent from './WizardComponent';
-import SidebarComponent from './SidebarComponent';
-import NavbarComponent from './NavbarComponent';
+import ModalConfirmComponent from './modal/ModalConfirmComponent';
+import ModalRightComponent from './modal/ModalRightComponent';
+import WizardComponent from './navigasi/WizardComponent';
+import SidebarComponent from './layout/SidebarComponent';
+import NavbarComponent from './layout/NavbarComponent';
+import BottomSheetComponent from './layout/BottomSheetComponent';
+import FloatingPageComponent from './layout/FloatingPageComponent';
 
 export {
   BadgeComponent,
@@ -61,5 +63,7 @@ export {
   WizardComponent,
   SidebarComponent,
   NavbarComponent,
-  ShadowScrollComponent
+  ShadowScrollComponent,
+  BottomSheetComponent,
+  FloatingPageComponent
 };

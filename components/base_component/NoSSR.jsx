@@ -2,7 +2,6 @@ import dynamic from "next/dynamic";
 import React from "react";
 
 const NoSsr = (props) => {
-  // console.log(props)
   return(
     <React.Fragment>{props.children}</React.Fragment>
   )
