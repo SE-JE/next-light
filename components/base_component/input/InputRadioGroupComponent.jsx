@@ -18,6 +18,10 @@ export default function InputRadioGroupComponent({
     const [invalid, setInvalid] = useState("");
 
     useEffect(() => {
+        setInvalid(error);
+    }, [error]);
+
+    useEffect(() => {
         setValue(setInputValue);
     }, [setInputValue]);
 
@@ -52,7 +56,7 @@ export default function InputRadioGroupComponent({
                                     checked={value == option.value}
                                     onChange={(e) => {
                                         setValue(option.value)
-
+                                        setInvalid(false)
                                         if (onChange) {
                                             onChange(option.value)
                                         }
@@ -62,6 +66,12 @@ export default function InputRadioGroupComponent({
                         })}
                     </div>
                 </div>
+
+                {invalid && (
+                    <small className='block px-2 pl-5 -bottom-6 text-sm text-left text__danger absolute'>
+                        {invalid}
+                    </small>
+                )}
             </div>
         </>
     )

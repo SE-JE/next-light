@@ -35,7 +35,7 @@ function ButtonComponent({
             : size == "sm" ? "py-2 px-8" : size == "lg" ? "py-4 px-12" : "py-3 px-10"
         } 
         ${rounded ? "rounded-full" : "rounded-lg"} 
-        ${block ? "block w-full" : "w-auto"} 
+        ${block ? "w-full flex justify-center" : "w-auto"} 
         ${border ? "border-[2px] border__" + border : ""} 
         ${disabled ? "btn__disabled" : `bg__${bg}`}
         ${loading ? "opacity-80" : ""}

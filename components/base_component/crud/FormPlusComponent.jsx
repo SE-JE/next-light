@@ -1,4 +1,4 @@
-import { faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightToBracket, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react'
 import { langValidate } from '../../../lang/validate';
 import ButtonComponent from '../ButtonComponent';
@@ -11,12 +11,14 @@ import { post } from '../../../pages/api/crud';
 import InputRadioGroupComponent from '../input/InputRadioGroupComponent';
 import InputImageComponent from '../input/InputImageComponent';
 import InputFileComponent from '../input/InputFileComponent';
+import ModalConfirmComponent from '../modal/ModalConfirmComponent';
 
-export default function FormPlusComponent({ title, submitUrl, forms }) {
+export default function FormPlusComponent({ title, submitUrl, forms, confirmation }) {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [modalConfirm, setModalConfirm] = useState(false);
     const [modalError, setModalError] = useState(false);
     const [modalSuccess, setModalSuccess] = useState(false);
+    const [transformData, setTransformData] = useState(null);
 
     const [FormValues, setFormValues] = useState([]);
     const [FormErrors, setFormErrors] = useState([]);
@@ -119,8 +121,6 @@ export default function FormPlusComponent({ title, submitUrl, forms }) {
                         })
                     }
                 }
-
-
             }
 
         })
@@ -129,16 +129,47 @@ export default function FormPlusComponent({ title, submitUrl, forms }) {
             setFormErrors(errors);
             setSubmitLoading(false)
         } else {
-            let formData = new FormData(e.target);
-
-            let response = await post(submitUrl, formData);
-
-            if (response?.status == 200) {
+            if (confirmation) {
                 setSubmitLoading(false)
-                setModalSuccess(true)
+                setModalConfirm(true)
+                setTransformData(e);
             } else {
-                setSubmitLoading(false)
+                sendApi(e);
             }
+        }
+    }
+
+
+    const sendApi = async (e) => {
+        setSubmitLoading(true)
+
+        let formData = new FormData(e.target);
+
+        let response = await post(submitUrl, formData);
+
+        if (response?.status == 200) {
+            setModalConfirm(false)
+            setModalError(false)
+            setSubmitLoading(false)
+            setModalSuccess(true)
+        } else if (response?.status == 422) {
+            let errors = [];
+
+            // ? validation rules form api
+            Object.keys(response.data.errors).map((key) => {
+                errors.push({
+                    name: key,
+                    msg: response.data.errors[key][0]
+                })
+            })
+
+            setFormErrors(errors);
+            setSubmitLoading(false)
+            setModalConfirm(false)
+        } else {
+            setModalConfirm(false)
+            setModalError(true)
+            setSubmitLoading(false)
         }
     }
 
@@ -208,6 +239,7 @@ export default function FormPlusComponent({ title, submitUrl, forms }) {
                                         label={form.label}
                                         options={form.options}
                                         name={form.name}
+                                        error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
                                     />
                                 </div>
                             )
@@ -222,6 +254,7 @@ export default function FormPlusComponent({ title, submitUrl, forms }) {
                                         name={form.name}
                                         label={form.label}
                                         aspect={"square"}
+                                        error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
                                     />
                                 </div>
                             )
@@ -236,6 +269,7 @@ export default function FormPlusComponent({ title, submitUrl, forms }) {
                                         name={form.name}
                                         label={form.label}
                                         aspect={"square"}
+                                        error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
                                     />
                                 </div>
                             )
@@ -290,6 +324,58 @@ export default function FormPlusComponent({ title, submitUrl, forms }) {
                     />
                 </div>
             </form>
+
+
+            <ModalConfirmComponent
+                show={modalConfirm}
+                onClose={(e) => setModalConfirm(false)}
+                onSubmit={(e) => {
+                    sendApi(transformData);
+                }}
+                submitLoading={submitLoading}
+            >
+                <p className='text-center text-lg'>Make sure the data you entered is correct?</p>
+            </ModalConfirmComponent>
+
+            <ModalConfirmComponent
+                show={modalSuccess}
+                onClose={() => setModalSuccess(false)}
+                icon={faCheckCircle}
+                title="Request Done"
+                bg={"success"}
+                color="gray"
+                noAction
+            >
+                <p className='text-center text-lg mb-8 -mt-4'>Successfully added data</p>
+
+                <div className='flex justify-center'>
+                    <ButtonComponent
+                        label={"Done"}
+                        bg="primary"
+                        onClick={() => setModalSuccess(false)}
+                    />
+                </div>
+            </ModalConfirmComponent>
+
+            <ModalConfirmComponent
+                show={modalError}
+                onClose={(e) => setModalError(false)}
+                title="Something Wrong"
+                onSubmit={(e) => {
+                    sendApi(transformData);
+                }}
+                noAction
+            >
+                <p className='text-center text-lg mb-8'>Check the data you entered or try again later?</p>
+
+                <div className='flex justify-center'>
+                    <ButtonComponent
+                        label={"Yes understand"}
+                        bg="primary"
+                        onClick={() => setModalError(false)}
+                    />
+                </div>
+            </ModalConfirmComponent>
         </>
     )
 }

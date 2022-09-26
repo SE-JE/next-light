@@ -1,6 +1,6 @@
 const APP_NAME = "next-light";
 
-const API_URL = "http://example.com/api";
+const API_URL = "http://localhost:8000/api";
 const STORAGE_URL = "http://example.com/storage";
 
 const COOKIE_KEY = "LKUCFSDU65765JHG234SDAD";

@@ -7,7 +7,8 @@ export default function form() {
             <div className='bg-white p-8 rounded-xl shadow-md'>
                 <FormPlusComponent
                     title={"Form Title"}
-                    submitUrl="/example"
+                    submitUrl="cek-api"
+                    confirmation
                     forms={[
                         {
                             label: "Name",
