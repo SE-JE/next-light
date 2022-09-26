@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { ValidateComponent } from "../";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { ValidateComponent } from "..";
+import { faPercent, faPlus, faRupiahSign } from "@fortawesome/free-solid-svg-icons";
 
-export default function InputPhoneComponent({
+export default function InputDiscountComponent({
   autoComplete,
   type,
   placeholder,
@@ -38,6 +38,7 @@ export default function InputPhoneComponent({
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [first, setFirst] = useState(true);
+  const [isPercent, setIsPercent] = useState(true);
 
   useEffect(() => {
     setSuggestions(listSuggestions);
@@ -53,21 +54,32 @@ export default function InputPhoneComponent({
 
   useEffect(() => {
     if (value && typeof value === "string") {
-      let val = value.split("");
-      let newVal = "";
+      if (!isPercent) {
+        var number_string = value.replace(/[^,\d]/g, '').toString(),
+          split = number_string.split(','),
+          sisa = split[0].length % 3,
+          rupiah = split[0].substr(0, sisa),
+          ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-      val.map((data, index) => {
-        if (index == 2 || index == 6 || index == 11 || index == 16) {
-          newVal += " ";
+        if (ribuan) {
+          let separator = sisa ? '.' : '';
+          rupiah += separator + ribuan.join('.');
         }
-        if (/[0-9]/.test(data)) {
-          newVal += data;
-        }
-      });
 
-      setValue(newVal);
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+
+        setValue(rupiah);
+      } else {
+        let newVal = value.replace(/[^,\d]/g, '').toString();
+
+        if (Number(newVal) > 100) {
+          newVal = 100
+        }
+
+        setValue(newVal);
+      }
     }
-  }, [value]);
+  }, [value, isPercent]);
 
   return (
     <>
@@ -92,13 +104,13 @@ export default function InputPhoneComponent({
         </label>
 
         <input
-          inputMode="numeric"
           type={"text"}
+          inputMode="numeric"
           value={value}
           placeholder={focus ? placeholder : ""}
           maxLength={validate && validate.max && validate.max}
           className={`
-            ${iconLeft ? "pl-20 pr-5" : icon ? "pl-10 pr-14" : "pl-10 pr-5"}
+            ${iconLeft ? "pl-20 pr-5" : icon ? `${isPercent ? "pl-5" : "pl-14"} pr-14` : `${isPercent ? "pl-5" : "pl-14"} pr-5`}
             ${invalid ? " invalid" : ""}
           `}
           name={name}
@@ -111,7 +123,10 @@ export default function InputPhoneComponent({
             }
           }}
           onBlur={() => {
-            setFocus(false);
+            setTimeout(() => {
+              setFocus(false);
+            }, 100);
+
             if (onBlur) {
               onBlur();
             }
@@ -149,10 +164,41 @@ export default function InputPhoneComponent({
         )}
 
         {(focus || value) && (
+          <label
+            htmlFor={name}
+            className={`absolute text-lg flex ${icon ? "mr-16" : "right-1 mr-5"}`}
+          >
+            <div
+              className={`px-4 py-2 cursor-pointer ${isPercent ? "bg__light__primary text__primary" : "bg-gray-100"} rounded-l-lg`}
+              onMouseDown={() => {
+                setIsPercent(true)
+                setTimeout(() => {
+                  setFocus(true);
+                }, 120);
+              }}
+            >
+              <FontAwesomeIcon icon={faPercent} />
+            </div>
+            <div
+              className={`px-4 py-2 cursor-pointer ${isPercent ? "bg-gray-100" : "bg__light__primary text__primary"} rounded-r-lg`}
+              onMouseDown={() => {
+                setIsPercent(false)
+                setTimeout(() => {
+                  setFocus(true);
+                }, 120);
+              }}
+            >
+              <FontAwesomeIcon icon={faRupiahSign} />
+            </div>
+          </label>
+        )}
+
+        {(focus || value) && !isPercent && (
           <div
             className={`absolute text-lg pt-4 ${iconLeft ? "ml-16" : "left-1 ml-5"}`}
           >
-            <FontAwesomeIcon icon={faPlus} />
+            {/* <FontAwesomeIcon icon={faRupiahSign} /> */}
+            Rp.
           </div>
         )}
 

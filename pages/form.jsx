@@ -100,6 +100,18 @@ export default function form() {
                             ],
                             col: 4
                         },
+                        {
+                            type: "image",
+                            label: "Avatar",
+                            name: "avatar",
+                            col: 3
+                        },
+                        {
+                            type: "file",
+                            label: "Kartu identitas",
+                            name: "kitas",
+                            col: 3
+                        },
                     ]}
                 />
             </div>

@@ -6,13 +6,16 @@ import CardComponent from './CardComponent';
 import CheckBoxComponent from './input/CheckBoxComponent';
 import InputButtonComponent from './input/InputButtonComponent';
 import InputCheckboxGroupComponent from './input/InputCheckboxGroupComponent';
+import InputRadioGroupComponent from './input/InputRadioGroupComponent';
 import InputCountComponent from './input/InputCountComponent';
 import InputDateComponent from './input/InputDateComponent';
 import InputDefaultComponent from './input/InputDefaultComponent';
 import InputEditorComponent from './input/InputEditorComponent';
 import InputImageComponent from './input/InputImageComponent';
-import InputPdfComponent from './input/InputPdfComponent';
+import InputFileComponent from './input/InputFileComponent';
 import InputPhoneComponent from './input/InputPhoneComponent';
+import InputRupiahComponent from './input/InputRupiahComponent';
+import InputDiscountComponent from './input/InputDiscountComponent';
 import InputStarComponent from './input/InputStarComponent';
 import InputStatusComponent from './input/InputStatusComponent';
 import InputMultipleDateComponent from './input/InputMultipleDateComponent';
@@ -46,7 +49,7 @@ export {
   InputDefaultComponent,
   InputEditorComponent,
   InputImageComponent,
-  InputPdfComponent,
+  InputFileComponent,
   InputPhoneComponent,
   InputStarComponent,
   LoadingComponent,
@@ -69,5 +72,8 @@ export {
   ShadowScrollComponent,
   BottomSheetComponent,
   FloatingPageComponent,
-  FormPlusComponent
+  FormPlusComponent,
+  InputRadioGroupComponent,
+  InputRupiahComponent,
+  InputDiscountComponent
 };

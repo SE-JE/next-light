@@ -8,7 +8,8 @@ function RadioComponent({
   className,
   disabled,
   id,
-  textSize
+  textSize,
+  value
 }) {
   return (
     <div
@@ -25,11 +26,15 @@ function RadioComponent({
         onChange={onChange}
         checked={checked}
         disabled={disabled}
+        value={value}
       />
       {label && (
         <label
           htmlFor={id ? id : name}
-          className={`ml-2 whitespace-nowrap font-semibold text-gray-600 text-${textSize}`}
+          className={`
+            ml-2 whitespace-nowrap font-semibold text-gray-600 text-${textSize ? textSize : "lg"}
+            ${checked ? "text-gray-700 font-bold" : "text-gray-500 font-medium"}
+          `}
         >
           {label}
         </label>

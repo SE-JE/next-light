@@ -8,6 +8,9 @@ import InputPhoneComponent from '../input/InputPhoneComponent';
 import SelectComponent from '../input/SelectComponent';
 import RadioComponent from '../input/RadioComponent';
 import { post } from '../../../pages/api/crud';
+import InputRadioGroupComponent from '../input/InputRadioGroupComponent';
+import InputImageComponent from '../input/InputImageComponent';
+import InputFileComponent from '../input/InputFileComponent';
 
 export default function FormPlusComponent({ title, submitUrl, forms }) {
     const [submitLoading, setSubmitLoading] = useState(false);
@@ -201,28 +204,39 @@ export default function FormPlusComponent({ title, submitUrl, forms }) {
                                         gridColumn: `span ${form?.col ? form.col : "12"} / span ${form?.col ? form.col : "12"}`
                                     }}
                                 >
-                                    {/* <InputDateComponent
+                                    <InputRadioGroupComponent
+                                        label={form.label}
+                                        options={form.options}
+                                        name={form.name}
+                                    />
+                                </div>
+                            )
+                        } else if (form?.type == "image") {
+                            return (
+                                <div
+                                    style={{
+                                        gridColumn: `span ${form?.col ? form.col : "12"} / span ${form?.col ? form.col : "12"}`
+                                    }}
+                                >
+                                    <InputImageComponent
                                         name={form.name}
                                         label={form.label}
-                                        placeholder={form.placeholder}
-                                        validate={form.validate}
-                                        error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
-                                    /> */}
-                                    <div className='py-2'>
-                                        <label htmlFor="">{form.label}</label>
-                                        <div className='flex gap-3 py-3'>
-                                            {form?.options?.at(0) && form.options.map((option, optionKey) => {
-                                                return (
-                                                    <RadioComponent
-                                                        key={optionKey}
-                                                        name={form.name}
-                                                        label={option.label}
-                                                        value={option.value}
-                                                    />
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
+                                        aspect={"square"}
+                                    />
+                                </div>
+                            )
+                        } else if (form?.type == "file") {
+                            return (
+                                <div
+                                    style={{
+                                        gridColumn: `span ${form?.col ? form.col : "12"} / span ${form?.col ? form.col : "12"}`
+                                    }}
+                                >
+                                    <InputFileComponent
+                                        name={form.name}
+                                        label={form.label}
+                                        aspect={"square"}
+                                    />
                                 </div>
                             )
                         } else {

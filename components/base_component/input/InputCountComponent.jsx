@@ -129,6 +129,7 @@ export default function InputCountComponent({
         <input
           ref={setRef}
           type={'text'}
+          inputMode="numeric"
           value={value ? subFix ? value + " " + subFix : value : ""}
           id={name}
           className={`

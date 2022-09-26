@@ -9,11 +9,13 @@ import styled from 'styled-components';
 
 import {
   faBold,
+  faBorderNone,
   faItalic,
   faLink,
   faList,
   faList12,
   faRedo,
+  faTable,
   faUnderline,
   faUndo,
   faUnlink,
@@ -139,59 +141,73 @@ const MenuBar = ({ editor }) => {
 
   return (
     <Container>
-      <div className='flex gap-3 p-3'>
+      <div className='flex gap-3 p-3 items-start'>
         <ButtonComponent
           icon={faUndo}
-          bg={"light__primary"}
+          border
+          color={"gray"}
           onClick={() => editor.commands.undo()}
           square
         />
 
         <ButtonComponent
           icon={faRedo}
-          bg={"light__primary"}
+          border
+          color={"gray"}
           onClick={() => editor.commands.redo()}
           square
         />
 
         <ButtonComponent
           icon={faBold}
-          bg={editor.isActive("bold") ? "primary" : "light__primary"}
+          bg={editor.isActive("bold") ? "primary" : ""}
+          color={editor.isActive("bold") ? "" : "gray"}
+          border={editor.isActive("bold") ? false : true}
           onClick={() => editor.chain().focus().toggleBold().run()}
           square
         />
 
         <ButtonComponent
           icon={faItalic}
-          bg={editor.isActive("italic") ? "primary" : "light__primary"}
+          bg={editor.isActive("italic") ? "primary" : ""}
+          color={editor.isActive("italic") ? "" : "gray"}
+          border={editor.isActive("italic") ? false : true}
           onClick={() => editor.chain().focus().toggleItalic().run()}
           square
         />
 
         <ButtonComponent
           icon={faUnderline}
-          bg={editor.isActive("underline") ? "primary" : "light__primary"}
+          bg={editor.isActive("underline") ? "primary" : ""}
+          color={editor.isActive("underline") ? "" : "gray"}
+          border={editor.isActive("underline") ? false : true}
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           square
         />
 
         <ButtonComponent
           icon={faList}
-          bg={editor.isActive("bulletList") ? "primary" : "light__primary"}
+          bg={editor.isActive("bulletList") ? "primary" : ""}
+          color={editor.isActive("bulletList") ? "" : "gray"}
+          border={editor.isActive("bulletList") ? false : true}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           square
         />
 
         <ButtonComponent
           icon={faList12}
-          bg={editor.isActive("orderedList") ? "primary" : "light__primary"}
+          bg={editor.isActive("orderedList") ? "primary" : ""}
+          color={editor.isActive("orderedList") ? "" : "gray"}
+          border={editor.isActive("orderedList") ? false : true}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           square
         />
 
         <InputButtonComponent
           setInputValue={linkUrl}
-          bg={editor.isActive("link") ? "primary" : "light__primary"}
+          bg={editor.isActive("link") ? "primary" : ""}
+          color={editor.isActive("link") ? "" : "gray"}
+          border={editor.isActive("link") ? false : true}
           icon={faLink}
           placeholder='Enetered your link'
           size={"sm"}
@@ -199,17 +215,21 @@ const MenuBar = ({ editor }) => {
           onChange={(e) => setLinkUrl(e)}
           onSubmit={() => setLink()}
         />
+
         <ButtonComponent
           icon={faUnlink}
-          bg={"light__primary"}
+          color={"gray"}
+          border
           onClick={() => editor.chain().focus().unsetLink().run()}
           disabled={!editor.isActive("link")}
           square
         />
 
-        {/* <ButtonComponent
+        <ButtonComponent
           icon={faTable}
-          bg={"light__primary"}
+          bg={editor.isActive("table") ? "primary" : ""}
+          color={editor.isActive("table") ? "" : "gray"}
+          border={editor.isActive("table") ? false : true}
           onClick={() => {
             const rows = window.prompt("Enter the rows number:");
             const cols = window.prompt("Enter the columns number:");
@@ -225,18 +245,20 @@ const MenuBar = ({ editor }) => {
         />
 
         <ButtonComponent
-          icon={faTable}
-          bg={"light__primary"}
+          icon={faBorderNone}
+          color={"gray"}
+          border
           onClick={() => {
             editor.chain().deleteTable().run();
           }}
           square
-        /> */}
+          disabled={!editor.isActive("table")}
+        />
 
         {/* <UploadImageButton addImage={addImage} /> */}
       </div>
 
-      {/* <button onClick={addImage}>add Image</button> */}
+      {/* <button onClick={(e) => handleChangePhotoButton(e)}>add Image</button> */}
     </Container>
   );
 };
@@ -293,7 +315,7 @@ const InputEditorComponent = ({
   useEffect(() => {
     setValue(setInputValue);
 
-    if (editor) {
+    if (editor && setInputValue) {
       editor.commands?.setContent(setInputValue)
     }
 

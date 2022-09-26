@@ -7,26 +7,41 @@ import CheckBoxComponent from './CheckBoxComponent';
 
 export default function InputCheckboxGroupComponent({
   label,
-  items,
+  options,
   col,
   setInputValue,
   onChange,
+  name,
+  className,
+  disabled,
 }) {
   const [values, setValues] = useState([]);
 
   useEffect(() => {
-    setValues(setInputValue);
+    setValues(setInputValue ? setInputValue : []);
   }, [setInputValue]);
 
   return (
-    <div className='bg-white p-5 rounded-xl'>
-      <label htmlFor='' className='text-semibold text-gray-500 block pt-2 pb-5'>
+    <div
+      className={`
+          w-full relative bg-white py-2 px-3 border-b-[3px] border-gray-300 rounded-xl
+          ${disabled ? "opacity-60" : ""} 
+          ${className}
+      `}
+    >
+      <label
+        htmlFor={name}
+        className={`
+          z-10 text-base text-gray-400
+        `}
+      >
         {label}
       </label>
-      <div className='max-h-[180px] scroll_control overflow-y-auto'>
-        <div className={`grid grid-cols-${col ? col : 1} gap-4`}>
-          {items &&
-            items.map((data, key) => {
+
+      <div className='max-h-[180px] scroll_control overflow-y-auto pt-1'>
+        <div className={`flex gap-4`}>
+          {options &&
+            options.map((data, key) => {
               return (
                 <CheckBoxComponent
                   key={key}
@@ -39,19 +54,24 @@ export default function InputCheckboxGroupComponent({
                         ...values.filter((val, _) => val != data.value),
                       ]);
 
-                      onChange([
-                        ...values.filter((val, _) => val != data.value),
-                      ]);
+                      if (onChange) {
+                        onChange([
+                          ...values.filter((val, _) => val != data.value),
+                        ]);
+                      }
+
                     } else {
                       setValues([
                         ...values.filter((val, _) => val != data.value),
                         data.value,
                       ]);
 
-                      onChange([
-                        ...values.filter((val, _) => val != data.value),
-                        data.value,
-                      ]);
+                      if (onChange) {
+                        onChange([
+                          ...values.filter((val, _) => val != data.value),
+                          data.value,
+                        ]);
+                      }
                     }
                   }}
                 />

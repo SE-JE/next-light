@@ -80,6 +80,7 @@ export default function MultipleDateComponent({
         </label>
 
         <input
+          readOnly="readonly"
           id={name}
           placeholder={focus ? placeholder : ""}
           value={value ? (!range ? moment(value).locale("id").format("DD MMMM YYYY") : moment(value[0]).locale("id").format("DD MMMM YYYY") + " - " + moment(value[1]).locale("id").format("DD MMMM YYYY")) : ""}

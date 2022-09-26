@@ -211,7 +211,6 @@ input::-webkit-calendar-picker-indicator {
 .cover__checkbox__control {
 	display: block;
 	position: relative;
-	padding-left: 27px;
 	cursor: pointer;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -232,16 +231,11 @@ input::-webkit-calendar-picker-indicator {
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 22px;
-	width: 22px;
+	height: 20px;
+	width: 20px;
 	border-width: 2px;
 	@apply rounded-md border-gray-300 bg-gray-200;
 }
-
-/* .cover__checkbox__control input:checked~.checkbox__control {
-  background-color: var(--primary);
-  border: none;
-} */
 
 .checkbox__primary input:checked ~ .checkbox__control {
 	background-color: var(--primary);
@@ -266,12 +260,12 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .cover__checkbox__control .checkbox__control:after {
-	left: 8px;
+	left: 7px;
 	top: 4px;
-	width: 7px;
-	height: 11px;
+	width: 6px;
+	height: 10px;
 	border: solid white;
-	border-width: 0 3px 3px 0;
+	border-width: 0 2.8px 2.8px 0;
 	-webkit-transform: rotate(45deg);
 	-ms-transform: rotate(45deg);
 	transform: rotate(45deg);
@@ -710,6 +704,9 @@ input::-webkit-calendar-picker-indicator {
 	}
 }
 
+
+/* * Mobile */
+
 @media (max-width: 1440px) {
 	.text-sm {
 		font-size: 9px !important;
@@ -731,13 +728,21 @@ input::-webkit-calendar-picker-indicator {
 	}
 }
 
-/* .ProseMirror {
+
+/* * Text Editor */
+
+.ProseMirror {
 	border: none !important;
 	margin: auto !important;
 	outline: none !important;
 	min-height: 20rem;
 	max-height: 20rem;
-	@apply w-full px-5 pt-12 pb-5 overflow-x-hidden overflow-y-auto text-lg font-semibold transition duration-150 ease-in-out bg-white rounded-xl;
+	@apply w-full px-5 pt-10 pb-5 overflow-x-hidden overflow-y-auto text-lg font-semibold transition duration-150 ease-in-out bg-white rounded-xl;
+}
+
+.ProseMirror table, th, td {
+  border: 1px solid;
+  @apply px-3 py-2;
 }
 
 .ProseMirror:hover {
@@ -750,7 +755,35 @@ input::-webkit-calendar-picker-indicator {
 
 .ProseMirror:disabled {
 	background: var(--disabled);
-} */
+}
+
+.ProseMirror::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+
+.ProseMirror:hover::-webkit-scrollbar {
+	width: 14px;
+	height: 14px;
+}
+
+.ProseMirror::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 3px rgba(0, 0, 0, .2);
+	border-radius: 10px;
+}
+
+.ProseMirror::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, .2);
+	border-radius: 10px;
+}
+
+.ProseMirror::-webkit-scrollbar-thumb:hover {
+	background: rgba(0, 0, 0, .4);
+}
+
 
 /* .btnUploadImage:disabled {
 	background-color: #eeeeee;
@@ -777,29 +810,15 @@ input::-webkit-calendar-picker-indicator {
 	box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, .45);
 } */
 
-/* .ProseMirror::-webkit-scrollbar {
-	width: 10px;
-	height: 10px;
-	position: fixed;
-	top: 0;
-	left: 0;
-}
-
-.ProseMirror:hover::-webkit-scrollbar {
-	width: 14px;
-	height: 14px;
-}
-
-.ProseMirror::-webkit-scrollbar-track {
-	box-shadow: inset 0 0 3px rgba(0, 0, 0, .2);
-	border-radius: 10px;
-}
-
-.ProseMirror::-webkit-scrollbar-thumb {
-	background: rgba(0, 0, 0, .2);
-	border-radius: 10px;
-}
-
-.ProseMirror::-webkit-scrollbar-thumb:hover {
-	background: rgba(0, 0, 0, .4);
+/* .button-cover:before {
+  counter-increment: button-counter;
+  content: counter(button-counter);
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: #d7e3e3;
+  font-size: 12px;
+  line-height: 1;
+  padding: 5px;
 } */
+

@@ -40,7 +40,11 @@ function ButtonComponent({
         ${disabled ? "btn__disabled" : `bg__${bg}`}
         ${loading ? "opacity-80" : ""}
         ${className}
-      `}>
+      `}
+      style={square ? {
+        width: size == "sm" ? '35px' : size == "lg" ? '55px' : '45px'
+      } : null}
+    >
 
       <div
         className={`

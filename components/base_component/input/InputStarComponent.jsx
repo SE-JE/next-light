@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function StarComponent({ setInputValue, onChange, disabled, className, iconLeft, invalid, label, icon, onFocus, onBlur, name }) {
@@ -66,9 +66,18 @@ export default function StarComponent({ setInputValue, onChange, disabled, class
                 <FontAwesomeIcon
                   icon={faStar}
                   className={`text-yellow-400 text-xl hover:scale-125 cursor-pointer`}
-                  onClick={() => {
+                  onMouseDown={(e) => {
                     setValue(num);
+                    setTimeout(() => {
+                      setFocus(true);
+                    }, 110);
+                  }}
 
+                  onMouseUp={() => {
+                    setValue(num);
+                    setTimeout(() => {
+                      setFocus(false);
+                    }, 120);
                     if (onChange) {
                       onChange(num);
                     }
@@ -80,9 +89,18 @@ export default function StarComponent({ setInputValue, onChange, disabled, class
                 <FontAwesomeIcon
                   icon={farStar}
                   className={`text-yellow-400 text-xl hover:scale-125 cursor-pointer`}
-                  onClick={() => {
+                  onMouseDown={(e) => {
                     setValue(num);
+                    setTimeout(() => {
+                      setFocus(true);
+                    }, 110);
+                  }}
 
+                  onMouseUp={() => {
+                    setValue(num);
+                    setTimeout(() => {
+                      setFocus(false);
+                    }, 120);
                     if (onChange) {
                       onChange(num);
                     }
@@ -94,7 +112,19 @@ export default function StarComponent({ setInputValue, onChange, disabled, class
         </div>
       )}
 
-
+      {value && (
+        <FontAwesomeIcon
+          className={`
+              absolute right-8 text-xl text-gray-400
+              ${focus ? "text__primary" : ""}
+              ${invalid ? "text__danger" : ""}
+            `}
+          icon={faTimes}
+          onClick={(e) => {
+            setValue("")
+          }}
+        />
+      )}
 
     </div>
   );
