@@ -9,27 +9,19 @@ export default function CheckBoxComponent({
   className,
   color,
   onChange,
-  defaultChecked,
+  checked,
   textSize
 }) {
-  const [checked, setChecked] = useState(false);
-  useEffect(() => {
-    setChecked(defaultChecked);
-  }, [defaultChecked]);
   return (
-    <div className='flex gap-8'>
+    <div className='flex items-center gap-3 2xl:gap-6 relative'>
       <label
         className={`${className} cover__checkbox__control checkbox__${color ? color : "primary"
           } text-sm`}>
         <input
           type='checkbox'
+          className='opacity-0'
           id={name}
-          onChange={(e) => {
-            setChecked(!checked);
-            if (onChange) {
-              onChange(e);
-            }
-          }}
+          onChange={onChange}
           checked={checked}
         />
         <span className='checkbox__control'></span>

@@ -36,6 +36,7 @@ import NavbarComponent from './layout/NavbarComponent';
 import BottomSheetComponent from './layout/BottomSheetComponent';
 import FloatingPageComponent from './layout/FloatingPageComponent';
 import FormPlusComponent from './crud/FormPlusComponent';
+import FilterComponent from './FilterComponent';
 
 export {
   BadgeComponent,
@@ -75,5 +76,6 @@ export {
   FormPlusComponent,
   InputRadioGroupComponent,
   InputRupiahComponent,
-  InputDiscountComponent
+  InputDiscountComponent,
+  FilterComponent
 };

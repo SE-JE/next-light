@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, {
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -14,10 +15,12 @@ import {
   faChevronRight,
   faEllipsis,
   faEllipsisH,
+  faFilter,
   faList,
   faMagnifyingGlass,
   faPlus,
   faSearch,
+  faSliders,
   faSort,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,6 +28,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import InputDefaultComponent from './input/InputDefaultComponent';
 import ButtonComponent from './ButtonComponent';
 import ShadowScrollComponent from './ShadowScrollComponent';
+import CheckBoxComponent from './input/CheckBoxComponent';
+import FilterComponent from './FilterComponent';
 
 export default function TableResponsiveComponent({
   columns,
@@ -46,6 +51,8 @@ export default function TableResponsiveComponent({
   // tabFilter,
   noSearch,
   topBar,
+  onChangeFilter,
+  setFilterValue,
 }) {
   const [menuSort, setMenuSort] = useState(false);
   const [columnSelector, setColumnSelector] = useState([]);
@@ -60,6 +67,7 @@ export default function TableResponsiveComponent({
   });
   const [inputSearch, setInputSearch] = useState("");
   const [doSearch, setDoSearch] = useState("");
+  const [floatingFilter, setFloatingFilter] = useState(false);
 
   useEffect(() => {
     let newSeletor = [];
@@ -128,6 +136,29 @@ export default function TableResponsiveComponent({
       onChangeSearch(inputSearch);
     }
   }, [doSearch]);
+
+
+  const wrapFilter = useRef([]);
+
+  useEffect(() => {
+    function handleClickOutsideFilter(e) {
+      setTimeout(() => {
+        if (
+          floatingFilter != false &&
+          wrapFilter.current[floatingFilter] &&
+          !wrapFilter.current[floatingFilter].contains(e.target)
+        ) {
+          setFloatingFilter(false);
+        }
+      }, 100);
+    }
+
+    document.addEventListener("mousedown", handleClickOutsideFilter);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideFilter);
+    };
+  }, [wrapFilter, floatingFilter]);
+
 
   return (
     <div className='pb-5'>
@@ -324,31 +355,92 @@ export default function TableResponsiveComponent({
                             return (
                               <div
                                 key={key}
-                                className={`px-6 py-4 font-bold ${column.sortable ? "cursor-pointer" : ""}`}
+                                className={`px-6 py-4 font-bold`}
                                 style={{
                                   width: column.width ? column.width : "200px"
                                 }}
-                                onClick={() => {
-                                  if (column.sortable && onChangeSort) {
-                                    onChangeSort({
-                                      selector: column.selector,
-                                      direction: (!setSort || setSort.selector != column.selector) ? "desc" : setSort.direction == "desc" ? "asc" : "desc",
-                                    })
-                                  }
-                                }}
+
                               >
                                 <div className='flex justify-between gap-2 items-center'>
-                              {column.label}
+                                  <div
+                                    className={`w-full ${column.sortable ? "cursor-pointer" : ""}`}
+                                    onClick={() => {
+                                      if (column.sortable && onChangeSort) {
+                                        onChangeSort({
+                                          selector: column.selector,
+                                          direction: (!setSort || setSort.selector != column.selector) ? "desc" : setSort.direction == "desc" ? "asc" : "desc",
+                                        })
+                                      }
+                                    }}
+                                  >
+                                    {column.label}
+                                  </div>
 
-                                  {(setSort && setSort.selector == column.selector) && (
-                                    <>
-                                      {setSort.direction == "desc" ? (
-                                        <FontAwesomeIcon icon={faArrowDownShortWide} className="text-lg" />
-                                      ) : (
-                                        <FontAwesomeIcon icon={faArrowUpShortWide} className="text-lg" />
-                                      )}
-                                    </>
-                                  )}
+                                  <div className='relative flex gap-4'>
+                                    {(setSort && setSort.selector == column.selector) && (
+                                      <div
+                                        className={`${column.sortable ? "cursor-pointer" : ""}`}
+                                        onClick={() => {
+                                          if (column.sortable && onChangeSort) {
+                                            onChangeSort({
+                                              selector: column.selector,
+                                              direction: (!setSort || setSort.selector != column.selector) ? "desc" : setSort.direction == "desc" ? "asc" : "desc",
+                                            })
+                                          }
+                                        }}
+                                      >
+                                        {setSort.direction == "desc" ? (
+                                          <FontAwesomeIcon icon={faArrowDownShortWide} className="text-lg" />
+                                        ) : (
+                                          <FontAwesomeIcon icon={faArrowUpShortWide} className="text-lg" />
+                                        )}
+                                      </div>
+                                    )}
+
+                                    {column.filter && (
+                                      <>
+                                        <div
+                                          className={`cursor-pointer ${setFilterValue?.filter((prev) => prev.column == column.selector)?.at(0)?.value?.at(0) ? "text__primary" : ""}`}
+                                          onClick={() => {
+                                            setFloatingFilter(floatingFilter == column.selector ? false : column.selector)
+                                          }}
+                                        >
+                                          <FontAwesomeIcon icon={faSliders} className="text-lg" />
+                                        </div>
+
+                                        <div
+                                          ref={el => wrapFilter.current[column.selector] = el}
+                                          className={`
+                                              absolute -bottom-2 z-10 w-64 translate-y-full right-0 p-4 bg-white rounded-lg shadow
+                                              ${floatingFilter == column.selector ? "" : "scale-y-0"}
+                                            `}
+                                        >
+                                          <div className='flex justify-between mb-3'>
+                                            <label className='text-sm'>Filter by {column.label}</label>
+                                            <div
+                                              className='text-sm text__secondary cursor-pointer'
+                                              onClick={() => onChangeFilter(setFilterValue?.filter((prev) => prev.column != column.selector))}
+                                            >
+                                              Reset
+                                            </div>
+                                          </div>
+
+                                          <FilterComponent
+                                            type={column.filter.type}
+                                            options={column.filter.options}
+                                            onChange={(e) => {
+                                              onChangeFilter([...setFilterValue?.filter((prev) => prev.column != column.selector), {
+                                                column: column.selector,
+                                                value: e,
+                                              }])
+                                            }}
+                                            setInputValue={setFilterValue?.filter((prev) => prev.column == column.selector)[0] ? setFilterValue?.filter((prev) => prev.column == column.selector)[0].value : []}
+                                          />
+                                        </div>
+                                      </>
+                                    )}
+
+                                  </div>
 
                                 </div>
 

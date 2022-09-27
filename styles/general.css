@@ -182,15 +182,15 @@ input::-webkit-calendar-picker-indicator {
 	color-adjust: exact;
 	border: 3px rgba(0, 0, 0, 0.2) solid;
 	border-radius: 50%;
-	height: 20px;
-	width: 20px;
+	height: 22px;
+	width: 22px;
 	margin-right: 3px;
 }
 
 .radio__control:checked {
 	position: relative;
 	border-color: transparent;
-	border: 2px var(--primary) solid;
+	border: 3px var(--primary) solid;
 	background-size: 100% 100%;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -219,20 +219,15 @@ input::-webkit-calendar-picker-indicator {
 	text-align: start;
 }
 
-.cover__checkbox__control input {
-	position: absolute;
-	opacity: 0;
-	cursor: pointer;
-	height: 0;
-	width: 0;
-}
+
 
 .checkbox__control {
 	position: absolute;
-	top: 0;
+	top: 50%;
+	transform: translateY(-50%);
 	left: 0;
-	height: 20px;
-	width: 20px;
+	height: 22px;
+	width: 22px;
 	border-width: 2px;
 	@apply rounded-md border-gray-300 bg-gray-200;
 }
@@ -261,9 +256,9 @@ input::-webkit-calendar-picker-indicator {
 
 .cover__checkbox__control .checkbox__control:after {
 	left: 7px;
-	top: 4px;
-	width: 6px;
-	height: 10px;
+	top: 2px;
+	width: 7px;
+	height: 12px;
 	border: solid white;
 	border-width: 0 2.8px 2.8px 0;
 	-webkit-transform: rotate(45deg);
@@ -725,6 +720,32 @@ input::-webkit-calendar-picker-indicator {
 	}
 	.text-2xl {
 		font-size: 17px !important;
+	}
+
+	.checkbox__control {
+		height: 18px;
+		width: 18px;
+	}
+
+	.cover__checkbox__control .checkbox__control:after {
+		left: 6px;
+		top: 3px;
+		width: 6px;
+		height: 10px;
+	}
+
+	.radio__control {
+		height: 18px;
+		width: 18px;
+	}
+
+	.radio__control:checked {
+		border: 3px var(--primary) solid;
+	}
+
+	.radio__control:checked::after {
+		width: 8px;
+		height: 8px;
 	}
 }
 

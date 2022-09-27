@@ -7,6 +7,7 @@ export default function Table() {
     const [page, setPage] = useState(1);
     const [paginate, setPaginate] = useState(10);
     const [searchColumn, setSearchColumn] = useState(null);
+    const [filter, setFilter] = useState([]);
 
     const columns = [
         {
@@ -21,7 +22,20 @@ export default function Table() {
         },
         {
             label: "Gender",
-            selector: "gender"
+            selector: "gender",
+            filter: {
+                type: "checkbox",
+                options: [
+                    {
+                        label: "Male",
+                        value: "male"
+                    },
+                    {
+                        label: "Female",
+                        value: "female"
+                    },
+                ]
+            }
         },
         {
             label: "Nationality",
@@ -297,6 +311,8 @@ export default function Table() {
                 searchColumn={true}
                 setSearchColumn={searchColumn}
                 onChangeSearchColumn={(e) => setSearchColumn(e)}
+                onChangeFilter={(e) => setFilter(e)}
+                setFilterValue={filter}
             />
         </div>
     )
