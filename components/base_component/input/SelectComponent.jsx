@@ -120,7 +120,7 @@ export default function SelectComponent({
           ${className}`}
       >
         <label
-          htmlFor={name}
+          htmlFor={name + "_field"}
           className={`
             absolute z-10 
             ${value || focus ? `active` : ``} 
@@ -131,16 +131,17 @@ export default function SelectComponent({
         >
           {label}
         </label>
+        <input type="hidden" name={name} value={options.filter((option) => option.label == value).at(0) ? options.filter((option) => option.label == value).at(0).value : ""} />
         <input
           readOnly={!searchable ? "readonly" : ""}
           value={value}
-          id={name}
+          id={name + "_field"}
           placeholder={focus ? placeholder : ""}
           className={`
             ${icon ? "pl-16 pr-5" : "pl-5 pr-5"}
             ${invalid ? " invalid" : ""}
           `}
-          name={name}
+          name={name + "_field"}
           disabled={disabled}
           onFocus={(e) => {
             setFocus(true);

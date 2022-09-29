@@ -1,5 +1,5 @@
 import { faArrowRightToBracket, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { langValidate } from '../../../lang/validate';
 import ButtonComponent from '../ButtonComponent';
 import InputDefaultComponent from '../input/InputDefaultComponent';
@@ -13,7 +13,7 @@ import InputImageComponent from '../input/InputImageComponent';
 import InputFileComponent from '../input/InputFileComponent';
 import ModalConfirmComponent from '../modal/ModalConfirmComponent';
 
-export default function FormPlusComponent({ title, submitUrl, forms, confirmation }) {
+export default function FormPlusComponent({ title, submitUrl, forms, confirmation, defaultValue }) {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [modalConfirm, setModalConfirm] = useState(false);
     const [modalError, setModalError] = useState(false);
@@ -173,6 +173,19 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
         }
     }
 
+
+    useEffect(() => {
+        let values = [];
+        Object.keys(defaultValue).map((def) => [
+            values.push({
+                name: def,
+                value: defaultValue[def]
+            })
+        ])
+
+        setFormValues(values)
+    }, [defaultValue]);
+
     return (
         <>
             <form onSubmit={(e) => handleSubmit(e)}>
@@ -193,6 +206,16 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                                         placeholder={form.placeholder}
                                         validate={form.validate}
                                         error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={
+                                            FormValues.filter((value) => value.name == form.name)?.at(0) ?
+                                                (typeof FormValues.filter((value) => value.name == form.name)?.at(0).value === "string") ?
+                                                    form.options.filter((option) => option.value == FormValues.filter((value) => value.name == form.name)?.at(0).value).at(0) ?
+                                                        form.options.filter((option) => option.value == FormValues.filter((value) => value.name == form.name)?.at(0).value).at(0).label
+                                                        : ""
+                                                    : FormValues.filter((value) => value.name == form.name)?.at(0).value.label
+                                                : ""
+                                        }
                                     />
                                 </div>
                             )
@@ -209,6 +232,8 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                                         placeholder={form.placeholder}
                                         validate={form.validate}
                                         error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
                                     />
                                 </div>
                             )
@@ -225,6 +250,8 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                                         placeholder={form.placeholder}
                                         validate={form.validate}
                                         error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
                                     />
                                 </div>
                             )
@@ -240,6 +267,8 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                                         options={form.options}
                                         name={form.name}
                                         error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
                                     />
                                 </div>
                             )
@@ -255,6 +284,8 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                                         label={form.label}
                                         aspect={"square"}
                                         error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
                                     />
                                 </div>
                             )
@@ -270,6 +301,8 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                                         label={form.label}
                                         aspect={"square"}
                                         error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
                                     />
                                 </div>
                             )
@@ -288,6 +321,14 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                                             placeholder={form.placeholder}
                                             validate={form.validate}
                                             error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                            onChange={(e) => {
+                                                setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])
+
+                                                if (form.type == "password" && form.validate?.confirmPassword) {
+                                                    setFormValues([...FormValues.filter((value) => value.name != "password_confirm")])
+                                                }
+                                            }}
+                                            setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
                                         />
                                     </div>
 
@@ -304,8 +345,13 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                                                 placeholder={"Re-enter your password"}
                                                 validate={{
                                                     required: true,
+                                                    confirm: FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""
                                                 }}
                                                 error={FormErrors.filter((error) => error.name == "password_confirm")?.at(0)?.msg}
+                                                onChange={(e) => {
+                                                    setFormValues([...FormValues.filter((value) => value.name != "password_confirm"), { name: "password_confirm", value: e }])
+                                                }}
+                                                setInputValue={FormValues.filter((value) => value.name == "password_confirm")?.at(0) ? FormValues.filter((value) => value.name == "password_confirm")?.at(0).value : ""}
                                             />
                                         </div>
                                     )}

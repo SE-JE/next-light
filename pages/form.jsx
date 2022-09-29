@@ -114,6 +114,10 @@ export default function form() {
                             col: 3
                         },
                     ]}
+                    defaultValue={{
+                        name: "Jhon Duck",
+                        position: "student"
+                    }}
                 />
             </div>
         </div>
