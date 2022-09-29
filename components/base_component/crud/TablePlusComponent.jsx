@@ -13,6 +13,7 @@ export default function Table({ title, urlPath, searchColumn, exceptColumns, exc
     const [srcColumn, setSrcColumn] = useState(null);
     const [filter, setFilter] = useState([]);
     const [isNull, setIsNull] = useState(false);
+    const [isError, setIsError] = useState(false);
 
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
@@ -29,39 +30,50 @@ export default function Table({ title, urlPath, searchColumn, exceptColumns, exc
             filter: JSON.stringify(filter)
         });
 
-        if (response.status == 200) {
+        if (response?.status == 200) {
             let responseData = response.data;
-            let newColumns = [];
 
-            Object.keys(responseData.at(0)).map((keyName) => {
-                if ((!exceptColumns || !exceptColumns.includes(keyName))) {
-                    newColumns.push({
-                        label: keyName.charAt(0).toUpperCase() + keyName.slice(1),
-                        selector: keyName,
-                        width: "200px",
-                        sortable: (!exceptSorts || !exceptSorts.includes(keyName))
+            if (responseData?.at(0)) {
+                let newColumns = [];
+
+                Object.keys(responseData.at(0)).map((keyName) => {
+                    if ((!exceptColumns || !exceptColumns.includes(keyName))) {
+                        newColumns.push({
+                            label: keyName.charAt(0).toUpperCase() + keyName.slice(1),
+                            selector: keyName,
+                            width: "200px",
+                            sortable: (!exceptSorts || !exceptSorts.includes(keyName))
+                        });
+                    }
+
+                })
+
+                if (response.data.filters) {
+                    Object.keys(response.data.filters).map((keyName) => {
+                        newColumns.filter((col) => col.selector == keyName).at(0).filters = response.data.filters[keyName]
                     });
                 }
 
-            })
+                if (response.data.total_row) {
+                    setTotalRow(response.data.total_row)
+                }
 
-            if (response.data.filters) {
-                Object.keys(response.data.filters).map((keyName) => {
-                    newColumns.filter((col) => col.selector == keyName).at(0).filters = response.data.filters[keyName]
-                });
+                setColumns(newColumns)
+                setData(responseData)
+            } else {
+                setData([]);
             }
 
-            if (response.data.total_row) {
-                setTotalRow(response.data.total_row)
-            }
-
-            setColumns(newColumns)
-            setData(responseData)
 
             setTimeout(() => {
                 setLoading(false)
             }, 1000);
+        } else {
+            setIsError(true)
 
+            setTimeout(() => {
+                setLoading(false)
+            }, 1000);
         }
 
     }, [paginate, page, sort, search, filter]);
@@ -70,26 +82,38 @@ export default function Table({ title, urlPath, searchColumn, exceptColumns, exc
         <div className='container mx-auto p-8'>
             <h1 className='text-xl font-bold mb-4'>{title}</h1>
 
-            <TableComponent
-                topBar={topBar}
-                columns={columns}
-                data={data}
-                setSort={sort}
-                onChangeSort={(e) => setSort(e)}
-                setTotalRow={totalRow}
-                setPage={page}
-                setPaginate={paginate}
-                onChangePage={(e) => setPage(e)}
-                onChangePaginate={(e) => setPaginate(e)}
-                searchColumn={searchColumn}
-                setSearchColumn={srcColumn}
-                onChangeSearchColumn={(e) => setSrcColumn(e)}
-                onChangeFilter={(e) => setFilter(e)}
-                setFilterValue={filter}
-                loading={loading}
-                onChangeSearch={(e) => setSearch(e)}
-                setSearch={search}
-            />
+            {!isError ? (
+                <TableComponent
+                    topBar={topBar}
+                    columns={columns}
+                    data={data}
+                    setSort={sort}
+                    onChangeSort={(e) => setSort(e)}
+                    setTotalRow={totalRow}
+                    setPage={page}
+                    setPaginate={paginate}
+                    onChangePage={(e) => setPage(e)}
+                    onChangePaginate={(e) => setPaginate(e)}
+                    searchColumn={searchColumn}
+                    setSearchColumn={srcColumn}
+                    onChangeSearchColumn={(e) => setSrcColumn(e)}
+                    onChangeFilter={(e) => setFilter(e)}
+                    setFilterValue={filter}
+                    loading={loading}
+                    onChangeSearch={(e) => setSearch(e)}
+                    setSearch={search}
+                />
+            ) : (
+                <div className='flex flex-col items-center justify-center gap-8 p-5'>
+                    <img
+                        src='/500.svg'
+                        width={"350px"}
+                        alt='server error'
+                    />
+                    <h1 className='text-2xl font-bold'>Server Disconnect</h1>
+                </div>
+            )}
+
         </div>
     )
 }

@@ -388,11 +388,14 @@ export default function TableComponent({
               <>
                   {!data || !data[0] ? (
                   <div className='flex justify-center p-5'>
-                    <img
-                      src='/images/no-data.svg'
-                      width={"350px"}
-                      alt='not found'
-                    />
+                      <div className='flex flex-col items-center justify-center gap-8 p-5'>
+                        <img
+                          src='/204.svg'
+                          width={"200px"}
+                          alt='server error'
+                        />
+                        <h1 className='text-2xl font-bold'>Empty Data</h1>
+                      </div>
                   </div>
                 ) : (
                       <div
