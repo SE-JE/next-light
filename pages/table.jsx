@@ -1,6 +1,6 @@
 import { faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react'
-import { ButtonComponent, TableComponent, TableResponsiveComponent } from '../components/base_component'
+import { ButtonComponent, TableComponent } from '../components/base_component'
 
 export default function Table() {
     const [sort, setSort] = useState(null);

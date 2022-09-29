@@ -843,3 +843,27 @@ input::-webkit-calendar-picker-indicator {
   padding: 5px;
 } */
 
+.skeleton__loading {
+    position: relative;
+}
+
+.skeleton__loading::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #e9e9e9;
+    background: linear-gradient(100deg, #e9e9e9 8%, #fff 14%, #e9e9e9 20%);
+    border-radius: 5px;
+    background-size: 200% 100%;
+    animation: 1s loading ease-out infinite;
+    z-index: 60;
+}
+
+@keyframes loading {
+    to {
+        background-position-x: -200%;
+    }
+}

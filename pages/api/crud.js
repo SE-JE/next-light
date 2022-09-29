@@ -13,17 +13,17 @@ const token_cookie_name = APP_NAME + ".user.token";
 
 export const get = async (
   path,
-  { search, filter, orderBy, orderDirection, perpage, page }
+  { search, filter, sortBy, sortDirection, paginate, page }
 ) => {
   try {
     return await axios
       .get(
-        `${API_URL}/${path}?perpage=${perpage ? perpage : 0}` +
+        `${API_URL}/${path}?paginate=${paginate ? paginate : 0}` +
         (search ? `&search=${search}` : "") +
         (filter ? `&filter=${filter}` : "") +
-        (orderBy ? `&order_by=${orderBy}` : "") +
-        (orderDirection
-          ? `&order_direction=${orderDirection.toLowerCase()}`
+        (sortBy ? `&sort_by=${sortBy}` : "") +
+        (sortDirection
+          ? `&sort_direction=${sortDirection.toLowerCase()}`
           : "") +
         (page ? `&page=${page}` : ""),
 

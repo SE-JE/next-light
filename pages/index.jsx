@@ -28,6 +28,10 @@ const Index = () => {
           <ButtonComponent label="Cek Table" bg={"primary"} />
         </Link>
 
+        <Link href="/table-plus">
+          <ButtonComponent label="Cek Table Plus" bg={"primary"} />
+        </Link>
+
         <Link href="/form">
           <ButtonComponent label="Cek Form" bg={"primary"} />
         </Link>

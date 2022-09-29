@@ -31,7 +31,7 @@ import ShadowScrollComponent from './ShadowScrollComponent';
 import CheckBoxComponent from './input/CheckBoxComponent';
 import FilterComponent from './FilterComponent';
 
-export default function TableResponsiveComponent({
+export default function TableComponent({
   columns,
   data,
   onChangeSearch,
@@ -46,7 +46,7 @@ export default function TableResponsiveComponent({
   setPaginate,
   onChangePage,
   setPage,
-  setLoading,
+  loading,
   width,
   // tabFilter,
   noSearch,
@@ -119,17 +119,17 @@ export default function TableResponsiveComponent({
   }, [setPage, setTotalRow, setPaginate, setSearch]);
 
   useEffect(() => {
-    if (setInputSearch != null) {
+    if (inputSearch != null) {
       const delaySearch = setTimeout(() => {
         if (onChangePage) {
           onChangePage(1);
         }
 
-        setDoSearch(!doSearch);
-      }, 1000);
+        setDoSearch(!doSearch)
+      }, 500);
       return () => clearTimeout(delaySearch);
     }
-  }, [setInputSearch]);
+  }, [inputSearch]);
 
   useEffect(() => {
     if (onChangeSearch) {
@@ -137,6 +137,9 @@ export default function TableResponsiveComponent({
     }
   }, [doSearch]);
 
+  useEffect(() => {
+    setInputSearch(setSearch)
+  }, [setSearch]);
 
   const wrapFilter = useRef([]);
 
@@ -171,55 +174,60 @@ export default function TableResponsiveComponent({
 
         <div className='flex items-center justify-between my-4'>
           <div className='relative z-20'>
-            <input
-              id='tablePage'
-              onFocus={() => setFloatingPerpage(true)}
-              onBlur={() => {
-                setTimeout(() => {
-                  setFloatingPerpage(false);
-                }, 100);
-              }}
-              className='pl-4 pr-12 py-3 w-24 text-md font-semibold rounded-md border-b border-gray-300 focus:shadow-inner'
-              value={setPaginate}
-              readOnly={"readonly"}
-            />
-            <label htmlFor="tablePage">
-              <FontAwesomeIcon
-                icon={faChevronDown}
-                className="absolute top-1/2 -translate-y-1/2 right-4 text-lg cursor-pointer"
-              />
-            </label>
+            {setTotalRow ? (
+              <>
+                <input
+                  id='tablePage'
+                  onFocus={() => setFloatingPerpage(true)}
+                  onBlur={() => {
+                    setTimeout(() => {
+                      setFloatingPerpage(false);
+                    }, 100);
+                  }}
+                  className='pl-4 pr-12 py-3 w-24 text-md font-semibold rounded-md border-b border-gray-300 focus:shadow-inner'
+                  value={setPaginate}
+                  readOnly={"readonly"}
+                />
+                <label htmlFor="tablePage">
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className="absolute top-1/2 -translate-y-1/2 right-4 text-lg cursor-pointer"
+                  />
+                </label>
 
-            <div
-              className={`absolute top-full right-1/2 translate-x-1/2 bg-white shadow-md rounded-lg py-2 ${!floatingPerpage ? "scale-0" : "scale-100"
-                }`}>
-              {[10, 20, 30, 50, 100].map((data, key) => {
-                return (
-                  <div
-                    key={key}
-                    className={`px-4 py-3 w-24 cursor-pointer hover__bg__light__primary ${setPaginate == data ? "bg__light__primary text__primary" : ""}`}
-                    // onClick={() => onChangePaginate(data)}
-                    onMouseDown={() => {
-                      setTimeout(() => {
-                        setFloatingPerpage(true);
-                      }, 110);
+                <div
+                  className={`absolute top-full right-1/2 translate-x-1/2 bg-white shadow-md rounded-lg py-2 ${!floatingPerpage ? "scale-0" : "scale-100"
+                    }`}
+                >
+                  {[10, 20, 30, 50, 100].map((data, key) => {
+                    return (
+                      <div
+                        key={key}
+                        className={`px-4 py-3 w-24 cursor-pointer hover__bg__light__primary ${setPaginate == data ? "bg__light__primary text__primary" : ""}`}
+                        // onClick={() => onChangePaginate(data)}
+                        onMouseDown={() => {
+                          setTimeout(() => {
+                            setFloatingPerpage(true);
+                          }, 110);
 
-                      onChangePaginate(data)
-                    }}
+                          onChangePaginate(data)
+                        }}
 
-                    onMouseUp={() => {
-                      setTimeout(() => {
-                        setFloatingPerpage(false);
-                      }, 120);
+                        onMouseUp={() => {
+                          setTimeout(() => {
+                            setFloatingPerpage(false);
+                          }, 120);
 
-                      onChangePaginate(data)
-                    }}
-                  >
-                    {data}
-                  </div>
-                )
-              })}
-            </div>
+                          onChangePaginate(data)
+                        }}
+                      >
+                        {data}
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
+            ) : <></>}
           </div>
 
           {!noSearch && (
@@ -301,9 +309,9 @@ export default function TableResponsiveComponent({
                 <input type="text"
                   name={"search"}
                   placeholder={"Search Data..."}
-                  value={setSearch}
+                  value={inputSearch}
                   onChange={(e) => setInputSearch(e.target.value)}
-                  className={`${setLoading ? "skeleton-loading" : ""} py-3 pl-4 pr-12 w-full font-semibold text-md ${searchColumn ? "rounded-r-lg" : "rounded-lg"} bg-white border-b border-gray-300`}
+                  className={`${loading ? "skeleton-loading" : ""} py-3 pl-4 pr-12 w-full font-semibold text-md ${searchColumn ? "rounded-r-lg" : "rounded-lg"} bg-white border-b border-gray-300`}
                   autoComplete={"off"}
                 />
 
@@ -325,8 +333,57 @@ export default function TableResponsiveComponent({
                 e.target.scrollWidth - 500
               )
             }>
-            {setLoading ? (
-              <></>
+            {loading ? (
+              <>
+                <div
+                  className='min-w-full'
+                  style={{
+                    width: width ? width : "max-content"
+                  }}
+                >
+                  {
+                    // ? Head Column
+                  }
+                  <div className='flex gap-4 mb-2 px-3 py-2'>
+                    <div className="w-16 px-6 py-4 font-bold skeleton__loading"></div>
+                    {[1, 2, 3, 4, 5].map((column, key) => {
+                      return (
+                        <div
+                          key={key}
+                          className={`px-6 py-3 font-bold skeleton__loading`}
+                          style={{
+                            width: "200px"
+                          }}
+                        ></div>
+                      )
+                    })}
+                  </div>
+
+                  {
+                    // ? Body Column
+                  }
+                  <div className='flex flex-col gap-y-2'>
+                    {[1, 2, 3, 4].map((item, key) => {
+                      return (
+                        <div className='flex items-center gap-4 bg-white rounded-lg shadow-sm relative p-3' key={key}>
+                          <div className="w-16 px-6 py-4 font-medium skeleton__loading"></div>
+                          {[1, 2, 3, 4, 5].map((column, key) => {
+                            return (
+                              <div
+                                key={key}
+                                className="px-6 py-4 text-lg font-medium skeleton__loading"
+                                style={{
+                                  width: "200px"
+                                }}
+                              ></div>
+                            )
+                          })}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </>
             ) : (
               <>
                   {!data || !data[0] ? (
@@ -454,53 +511,53 @@ export default function TableResponsiveComponent({
                         }
                         <div className='flex flex-col gap-y-2'>
                           {(data && data[0]) && data.map((item, key) => {
-                        return (
-                          <div className='flex items-center gap-4 bg-white rounded-lg shadow-sm relative' key={key}>
-                            <div className="w-16 px-6 py-4 font-medium">
-                              {key + 1}
-                            </div>
-                            {columns && columns.map((column, key) => {
-                              return (
-                                <div
-                                  key={key}
-                                  className="px-6 py-4 text-lg font-medium"
-                                  style={{
-                                    width: column.width ? column.width : "200px"
-                                  }}
-                                >
-                                  {item[column.selector] ? item[column.selector] : "-"}
+                            return (
+                              <div className='flex items-center gap-4 bg-white rounded-lg shadow-sm relative' key={key}>
+                                <div className="w-16 px-6 py-4 font-medium">
+                                  {key + 1}
                                 </div>
-                              )
-                            })}
-                            <div className="flex-1 flex justify-end gap-2 px-6 py-4">
-                              {item.action}
-                            </div>
-
-                            {floatingAction && (
-                              <div
-                                className='sticky hover:-right-2 bg__background -right-5 z-30 cursor-pointer flex shadow rounded-l-lg'
-                                onClick={() =>
-                                  floatingActionActive == key
-                                    ? setFloatingActionActive(-1)
-                                    : setFloatingActionActive(key)
-                                }>
-                                <div className=' pl-5 pr-7 py-5'>
-                                  <FontAwesomeIcon icon={floatingActionActive != key ? faChevronLeft : faChevronRight} className="text__primary" />
-                                </div>
-
-                                <div
-                                  className={`py-2 flex gap-2 ${floatingActionActive == key
-                                    ? "w-max pl-2 pr-8"
-                                    : "w-0"
-                                    }`}>
+                                {columns && columns.map((column, key) => {
+                                  return (
+                                    <div
+                                      key={key}
+                                      className="px-6 py-4 text-lg font-medium"
+                                      style={{
+                                        width: column.width ? column.width : "200px"
+                                      }}
+                                    >
+                                      {item[column.selector] ? item[column.selector] : "-"}
+                                    </div>
+                                  )
+                                })}
+                                <div className="flex-1 flex justify-end gap-2 px-6 py-4">
                                   {item.action}
                                 </div>
-                              </div>
-                            )}
 
-                          </div>
-                        )
-                      })}
+                                {(item.action && floatingAction) && (
+                                  <div
+                                    className='sticky hover:-right-2 bg__background -right-5 z-30 cursor-pointer flex shadow rounded-l-lg'
+                                    onClick={() =>
+                                      floatingActionActive == key
+                                        ? setFloatingActionActive(-1)
+                                        : setFloatingActionActive(key)
+                                    }>
+                                    <div className=' pl-5 pr-7 py-5'>
+                                      <FontAwesomeIcon icon={floatingActionActive != key ? faChevronLeft : faChevronRight} className="text__primary" />
+                                    </div>
+
+                                    <div
+                                      className={`py-2 flex gap-2 ${floatingActionActive == key
+                                        ? "w-max pl-2 pr-8"
+                                        : "w-0"
+                                        }`}>
+                                      {item.action}
+                                    </div>
+                                  </div>
+                                )}
+
+                              </div>
+                            )
+                          })}
                         </div>
                       </div>
                 )}
@@ -509,7 +566,7 @@ export default function TableResponsiveComponent({
           </ShadowScrollComponent>
         </div>
 
-        {setTotalRow && (
+        {setTotalRow ? (
           <div className='flex items-center justify-between p-4'>
             <div className='flex items-center gap-3'>
               {setPage > 1 && (
@@ -580,7 +637,7 @@ export default function TableResponsiveComponent({
               {/* <div className='text-gray-600'>Per halaman</div> */}
             </div>
           </div>
-        )}
+        ) : <></>}
       </div>
     </div>
   );
