@@ -37,6 +37,7 @@ import BottomSheetComponent from './layout/BottomSheetComponent';
 import FloatingPageComponent from './layout/FloatingPageComponent';
 import FormPlusComponent from './crud/FormPlusComponent';
 import TablePlusComponent from './crud/TablePlusComponent';
+import TableCrudComponent from './crud/TableCrudComponent';
 import FilterComponent from './FilterComponent';
 
 export {
@@ -79,5 +80,6 @@ export {
   InputRupiahComponent,
   InputDiscountComponent,
   FilterComponent,
-  TablePlusComponent
+  TablePlusComponent,
+  TableCrudComponent
 };

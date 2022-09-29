@@ -56,7 +56,7 @@ export default function TableComponent({
 }) {
   const [menuSort, setMenuSort] = useState(false);
   const [columnSelector, setColumnSelector] = useState([]);
-  const [floatingAction, setFloatingAction] = useState(true);
+  const [floatingAction, setFloatingAction] = useState(false);
   const [floatingPerpage, setFloatingPerpage] = useState(false);
   const [floatingSearchColumn, setFloatingSearchColumn] = useState(false);
   const [floatingActionActive, setFloatingActionActive] = useState(-1);
@@ -203,7 +203,11 @@ export default function TableComponent({
                     return (
                       <div
                         key={key}
-                        className={`px-4 py-3 w-24 cursor-pointer hover__bg__light__primary ${setPaginate == data ? "bg__light__primary text__primary" : ""}`}
+                        className={`
+                          px-4 py-3 w-24 cursor-pointer hover__bg__light__primary 
+                          ${setPaginate == data ? "bg__light__primary text__primary" : ""}
+                          ${!setTotalRow ? "pointer-events-none bg__disabled" : ""}
+                        `}
                         // onClick={() => onChangePaginate(data)}
                         onMouseDown={() => {
                           setTimeout(() => {
@@ -329,7 +333,7 @@ export default function TableComponent({
             className={'w-full py-4 overflow-x-auto scroll_control'}
             onScroll={(e) =>
               setFloatingAction(
-                e.target.scrollLeft + e.target.offsetWidth <=
+                element.scrollWidth > element.clientWidth && e.target.scrollLeft + e.target.offsetWidth <=
                 e.target.scrollWidth - 500
               )
             }>

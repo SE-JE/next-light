@@ -52,12 +52,15 @@ export const get = async (
 
 
 export const post = async (path, data, params, contentType) => {
+  var newData = {};
+  data.forEach((value, key) => newData[key] = value);
+
   try {
     return await axios
-      .post(`${API_URL}/${path}${params ? "?" + params : ""}`, data, {
+      .post(`${API_URL}/${path}${params ? "?" + params : ""}`, newData, {
         headers: {
           Authorization: Cookies.get(token_cookie_name) ? "Bearer " + Decrypt(Cookies.get(token_cookie_name)) : "",
-          "content-type": contentType ? contentType : "multipart/form-data",
+          "Content-Type": contentType ? contentType : "application/json",
         },
       })
       .then((res) => {

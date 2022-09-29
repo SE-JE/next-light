@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { ButtonComponent, TableComponent } from '../'
 import { get } from '../../../pages/api/crud';
 
-export default function Table({ title, urlPath, searchColumn, exceptColumns, exceptSorts, topBar }) {
+export default function TablePlusComponent({ title, urlPath, searchColumn, exceptColumns, exceptSorts, topBar }) {
     const [loading, setLoading] = useState(true);
     const [paginate, setPaginate] = useState(10);
     const [page, setPage] = useState(1);
@@ -12,7 +12,6 @@ export default function Table({ title, urlPath, searchColumn, exceptColumns, exc
     const [search, setSearch] = useState("");
     const [srcColumn, setSrcColumn] = useState(null);
     const [filter, setFilter] = useState([]);
-    const [isNull, setIsNull] = useState(false);
     const [isError, setIsError] = useState(false);
 
     const [data, setData] = useState([]);
@@ -31,7 +30,7 @@ export default function Table({ title, urlPath, searchColumn, exceptColumns, exc
         });
 
         if (response?.status == 200) {
-            let responseData = response.data;
+            let responseData = response.data.data;
 
             if (responseData?.at(0)) {
                 let newColumns = [];

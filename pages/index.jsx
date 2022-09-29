@@ -7,7 +7,7 @@ const Index = () => {
     <div className='container mx-auto'>
       <h1 className="my-8">HELLO WORLD!</h1>
 
-      <div className='flex gap-5'>
+      <div className='flex flex-wrap gap-5'>
         <Link href="/component">
           <ButtonComponent label="Cek Input Component" bg={"primary"} />
         </Link>
@@ -29,6 +29,10 @@ const Index = () => {
         </Link>
 
         <Link href="/table-plus">
+          <ButtonComponent label="Cek Table Plus" bg={"primary"} />
+        </Link>
+
+        <Link href="/table-crud">
           <ButtonComponent label="Cek Table Plus" bg={"primary"} />
         </Link>
 

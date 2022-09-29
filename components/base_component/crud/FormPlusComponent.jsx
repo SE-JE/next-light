@@ -13,7 +13,14 @@ import InputImageComponent from '../input/InputImageComponent';
 import InputFileComponent from '../input/InputFileComponent';
 import ModalConfirmComponent from '../modal/ModalConfirmComponent';
 
-export default function FormPlusComponent({ title, submitUrl, forms, confirmation, defaultValue }) {
+export default function FormPlusComponent({
+    title,
+    submitUrl,
+    forms,
+    confirmation,
+    defaultValue,
+    onSuccess,
+}) {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [modalConfirm, setModalConfirm] = useState(false);
     const [modalError, setModalError] = useState(false);
@@ -147,7 +154,8 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
 
         let response = await post(submitUrl, formData);
 
-        if (response?.status == 200) {
+        if (response?.status == 200 || response?.status == 201) {
+            setFormValues([])
             setModalConfirm(false)
             setModalError(false)
             setSubmitLoading(false)
@@ -175,21 +183,24 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
 
 
     useEffect(() => {
-        let values = [];
-        Object.keys(defaultValue).map((def) => [
-            values.push({
-                name: def,
-                value: defaultValue[def]
-            })
-        ])
+        if (defaultValue) {
+            let values = [];
+            Object.keys(defaultValue).map((def) => [
+                values.push({
+                    name: def,
+                    value: defaultValue[def]
+                })
+            ])
 
-        setFormValues(values)
+            setFormValues(values)
+        }
+
     }, [defaultValue]);
 
     return (
         <>
             <form onSubmit={(e) => handleSubmit(e)}>
-                <h4 className='text-xl text-gray-600 font-semibold mb-6'>{title}</h4>
+                {title && <h4 className='text-xl text-gray-600 font-semibold mb-6'>{title}</h4>}
                 <div className='grid grid-cols-12 gap-8'>
                     {forms.map((form, key) => {
                         if (form?.type == "select") {
@@ -360,7 +371,7 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                         }
                     })}
                 </div>
-                <div className='flex justify-end mt-8'>
+                <div className='flex justify-end mt-12'>
                     <ButtonComponent
                         type={"submit"}
                         label="Submit"
@@ -385,7 +396,13 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
 
             <ModalConfirmComponent
                 show={modalSuccess}
-                onClose={() => setModalSuccess(false)}
+                onClose={() => {
+                    setModalSuccess(false)
+
+                    if (onSuccess) {
+                        onSuccess();
+                    }
+                }}
                 icon={faCheckCircle}
                 title="Request Done"
                 bg={"success"}
@@ -398,7 +415,13 @@ export default function FormPlusComponent({ title, submitUrl, forms, confirmatio
                     <ButtonComponent
                         label={"Done"}
                         bg="primary"
-                        onClick={() => setModalSuccess(false)}
+                        onClick={() => {
+                            setModalSuccess(false)
+
+                            if (onSuccess) {
+                                onSuccess();
+                            }
+                        }}
                     />
                 </div>
             </ModalConfirmComponent>
