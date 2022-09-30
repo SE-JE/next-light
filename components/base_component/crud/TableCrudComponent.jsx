@@ -177,7 +177,7 @@ export default function TableCrudComponent({
         }
 
     }, [paginate, page, sort, search, filter, refresh]);
-    console.log(dataSelected);
+
     return (
         <>
             <div className='container mx-auto p-8'>
