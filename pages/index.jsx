@@ -33,7 +33,7 @@ const Index = () => {
         </Link>
 
         <Link href="/table-crud">
-          <ButtonComponent label="Cek Table Plus" bg={"primary"} />
+          <ButtonComponent label="Cek Table Crud" bg={"primary"} />
         </Link>
 
         <Link href="/form">

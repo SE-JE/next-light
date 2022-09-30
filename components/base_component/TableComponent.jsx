@@ -333,7 +333,7 @@ export default function TableComponent({
             className={'w-full py-4 overflow-x-auto scroll_control'}
             onScroll={(e) =>
               setFloatingAction(
-                element.scrollWidth > element.clientWidth && e.target.scrollLeft + e.target.offsetWidth <=
+                e.target.scrollLeft + e.target.offsetWidth <=
                 e.target.scrollWidth - 500
               )
             }>

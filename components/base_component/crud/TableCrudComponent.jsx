@@ -1,7 +1,7 @@
-import { faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect, useState } from 'react'
-import { ButtonComponent, TableComponent, ModalRightComponent, FormPlusComponent } from '../'
-import { get } from '../../../pages/api/crud';
+import { ButtonComponent, TableComponent, ModalRightComponent, FormPlusComponent, ModalConfirmComponent } from '../'
+import { destroy, get } from '../../../pages/api/crud';
 
 export default function TableCrudComponent({
     title,
@@ -14,7 +14,11 @@ export default function TableCrudComponent({
     const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [modalForm, setModalForm] = useState(false);
+    const [modalView, setModalView] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
+    const [modalDeleteSuccess, setModalDeleteSuccess] = useState(false);
+    const [modalDeleteError, setModalDeleteError] = useState(false);
+    const [loadingDelete, setLoadingDelete] = useState(false);
 
     const [paginate, setPaginate] = useState(10);
     const [page, setPage] = useState(1);
@@ -27,6 +31,7 @@ export default function TableCrudComponent({
 
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
+    const [dataSelected, setDataSelected] = useState(false);
 
     const [forms, setForms] = useState([]);
 
@@ -42,7 +47,7 @@ export default function TableCrudComponent({
             filter: JSON.stringify(filter)
         });
 
-        if (response?.status == 200) {
+        if (response?.status == 200 || response?.status == 204) {
             let responseData = response.data.data;
 
             if (responseData?.at(0)) {
@@ -104,6 +109,10 @@ export default function TableCrudComponent({
                                     color="secondary"
                                     size={"sm"}
                                     rounded
+                                    onClick={() => {
+                                        setModalView(true)
+                                        setDataSelected(key)
+                                    }}
                                 />
                                 <ButtonComponent
                                     icon={faEdit}
@@ -112,6 +121,10 @@ export default function TableCrudComponent({
                                     color="warning"
                                     size={"sm"}
                                     rounded
+                                    onClick={() => {
+                                        setModalForm(true)
+                                        setDataSelected(key)
+                                    }}
                                 />
                                 <ButtonComponent
                                     icon={faTrash}
@@ -120,6 +133,10 @@ export default function TableCrudComponent({
                                     color="danger"
                                     size={"sm"}
                                     rounded
+                                    onClick={() => {
+                                        setModalDelete(true)
+                                        setDataSelected(key)
+                                    }}
                                 />
                             </>
                         )
@@ -129,6 +146,22 @@ export default function TableCrudComponent({
 
                 setData(newData)
             } else {
+                if (!customForm) {
+                    let newForms = [];
+
+                    response.data.columns.map((column) => {
+                        newForms.push({
+                            label: column.charAt(0).toUpperCase() + column.slice(1),
+                            name: column,
+                            placeholder: "Please enter " + column + "...",
+                            validate: {
+                                required: true,
+                            },
+                        });
+                    })
+
+                    setForms(newForms)
+                }
                 setData([]);
             }
 
@@ -144,7 +177,7 @@ export default function TableCrudComponent({
         }
 
     }, [paginate, page, sort, search, filter, refresh]);
-
+    console.log(dataSelected);
     return (
         <>
             <div className='container mx-auto p-8'>
@@ -194,22 +227,125 @@ export default function TableCrudComponent({
             </div>
 
             <ModalRightComponent
-                title={"Add New " + title}
-                subTitle={"Masukkan data secara valid dan benar!"}
+                title={dataSelected === false ? "Add New " + title : "Edit " + title}
+                subTitle={"Enter valid and correct data!"}
                 show={modalForm}
-                onClose={(e) => setModalForm(false)}
+                onClose={(e) => {
+                    setModalForm(false)
+                    setDataSelected(false)
+                }}
             >
                 <FormPlusComponent
-                    submitUrl="users"
+                    submitUrl={dataSelected === false ? urlPath : urlPath + "/" + data?.at(dataSelected).id}
+                    method={dataSelected === false ? "post" : "put"}
                     confirmation
                     forms={forms}
-                    defaultValue={null}
+                    defaultValue={dataSelected === false ? null : data?.at(dataSelected)}
                     onSuccess={() => {
                         setModalForm(false)
                         setRefresh(!refresh)
+                        setDataSelected(false)
                     }}
                 />
             </ModalRightComponent>
+
+            <ModalRightComponent
+                title={"Detail " + title}
+                show={modalView}
+                onClose={(e) => {
+                    setModalView(false)
+                    setDataSelected(false)
+                }}
+            >
+                <div className='flex flex-col gap-4'>
+                    {columns.map((column, key) => {
+                        return (
+                            <div className='flex justify-between gap-4 py-4 border-b' key={key}>
+                                <h6 className='text-lg'>{column.label} :</h6>
+                                <p className='text-lg font-semibold'>{data?.at(dataSelected) ? data?.at(dataSelected)[column.selector] : "-"}</p>
+                            </div>
+                        )
+                    })}
+
+                </div>
+            </ModalRightComponent>
+
+            <ModalConfirmComponent
+                title={"Are You Sure Deleted " + title}
+                show={modalDelete}
+                onClose={(e) => {
+                    setModalDelete(false)
+                    setDataSelected(false)
+                    setDataSelected(false)
+                }}
+                onSubmit={async () => {
+                    setLoadingDelete(true)
+
+                    if (dataSelected !== false) {
+                        let response = await destroy(urlPath + "/" + data?.at(dataSelected).id);
+
+                        if (response?.status == 200 || response?.status == 201) {
+                            setModalDeleteError(false)
+                            setLoadingDelete(false)
+                            setModalDeleteSuccess(true)
+                            setDataSelected(false)
+                            setModalDelete(false)
+                        } else {
+                            setModalDeleteSuccess(false)
+                            setModalDeleteError(true)
+                            setLoadingDelete(false)
+                            setModalDelete(false)
+                        }
+                    }
+
+                }}
+                submitLoading={loadingDelete}
+            >
+                <p className='text-center'>Deleted data cannot be recovered!</p>
+            </ModalConfirmComponent>
+
+            <ModalConfirmComponent
+                show={modalDeleteSuccess}
+                onClose={() => {
+                    setModalDeleteSuccess(false)
+                    setRefresh(!refresh)
+                }}
+                icon={faCheckCircle}
+                title="Request Done"
+                bg={"success"}
+                color="gray"
+                noAction
+            >
+                <p className='text-center text-lg mb-8 -mt-4'>Successfully deleted data!</p>
+
+                <div className='flex justify-center'>
+                    <ButtonComponent
+                        label={"Done"}
+                        bg="primary"
+                        onClick={() => {
+                            setModalDeleteSuccess(false)
+                            setRefresh(!refresh)
+                        }}
+                    />
+                </div>
+            </ModalConfirmComponent>
+
+            <ModalConfirmComponent
+                show={modalDeleteError}
+                onClose={(e) => setModalDeleteError(false)}
+                title="Something Wrong!"
+                noAction
+            >
+                <p className='text-center text-lg mb-8'>Check your connection and try again later!</p>
+
+                <div className='flex justify-center'>
+                    <ButtonComponent
+                        label={"Yes understand"}
+                        bg="primary"
+                        onClick={() => setModalDeleteError(false)}
+                    />
+                </div>
+            </ModalConfirmComponent>
         </>
     )
 }

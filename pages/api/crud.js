@@ -82,12 +82,15 @@ export const post = async (path, data, params, contentType) => {
 
 export const put = async (path, data, params, contentType) => {
   try {
-    data.append("_method", "PUT");
+    // data.append("_method", "PUT");
+    var newData = {};
+    data.forEach((value, key) => newData[key] = value);
     return await axios
-      .post(`${API_URL}/${path}${params ? "?" + params : ""}`, data, {
+      .put(`${API_URL}/${path}${params ? "?" + params : ""}`, newData, {
         headers: {
           Authorization: Cookies.get(token_cookie_name) ? "Bearer " + Decrypt(Cookies.get(token_cookie_name)) : "",
-          "content-type": contentType ? contentType : "multipart/form-data",
+          // "content-type": contentType ? contentType : "multipart/form-data",
+          "content-type": contentType ? contentType : "application/json",
         },
       })
       .then((res) => {

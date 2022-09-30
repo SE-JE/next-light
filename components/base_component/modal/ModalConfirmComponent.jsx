@@ -67,7 +67,7 @@ function ModalConfirmComponent({
           <div className='flex justify-center gap-4 mt-7'>
             <ButtonComponent
               icon={faTimes}
-              bg='danger'
+              color='danger'
               label={"Cancel"}
               rounded
               onClick={() => onClose()}

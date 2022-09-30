@@ -7,7 +7,7 @@ import InputDateComponent from '../input/InputDateComponent';
 import InputPhoneComponent from '../input/InputPhoneComponent';
 import SelectComponent from '../input/SelectComponent';
 import RadioComponent from '../input/RadioComponent';
-import { post } from '../../../pages/api/crud';
+import { post, put } from '../../../pages/api/crud';
 import InputRadioGroupComponent from '../input/InputRadioGroupComponent';
 import InputImageComponent from '../input/InputImageComponent';
 import InputFileComponent from '../input/InputFileComponent';
@@ -20,6 +20,7 @@ export default function FormPlusComponent({
     confirmation,
     defaultValue,
     onSuccess,
+    method
 }) {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [modalConfirm, setModalConfirm] = useState(false);
@@ -151,8 +152,14 @@ export default function FormPlusComponent({
         setSubmitLoading(true)
 
         let formData = new FormData(e.target);
+        let response;
 
-        let response = await post(submitUrl, formData);
+        if (method == "put") {
+            response = await put(submitUrl, formData);
+        } else {
+            response = await post(submitUrl, formData);
+        }
+
 
         if (response?.status == 200 || response?.status == 201) {
             setFormValues([])
@@ -193,6 +200,8 @@ export default function FormPlusComponent({
             ])
 
             setFormValues(values)
+        } else {
+            setFormValues([])
         }
 
     }, [defaultValue]);
@@ -409,7 +418,7 @@ export default function FormPlusComponent({
                 color="gray"
                 noAction
             >
-                <p className='text-center text-lg mb-8 -mt-4'>Successfully added data</p>
+                <p className='text-center text-lg mb-8 -mt-4'>Data entered successfully in the system!</p>
 
                 <div className='flex justify-center'>
                     <ButtonComponent
@@ -430,12 +439,9 @@ export default function FormPlusComponent({
                 show={modalError}
                 onClose={(e) => setModalError(false)}
                 title="Something Wrong"
-                onSubmit={(e) => {
-                    sendApi(transformData);
-                }}
                 noAction
             >
-                <p className='text-center text-lg mb-8'>Check the data you entered or try again later?</p>
+                <p className='text-center text-lg mb-8'>Check the data you entered or try again later!</p>
 
                 <div className='flex justify-center'>
                     <ButtonComponent
