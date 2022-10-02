@@ -39,14 +39,8 @@ export default function NavbarComponent({ children, activePage }) {
     };
   }, [wrapProfile, profile]);
 
-  const submitLogout = (e) => {
-    Cookies.remove("lila.user.token");
-    Cookies.remove("lila.user.profile");
-    router.push("/login");
-  };
-
   return (
-    <div className="p-4 flex items-center justify-between bg-white rounded-xl relative">
+    <div className="p-4 flex items-center justify-between bg-white rounded-xl relative shadow-sm">
       <div className="px-4">
         {children}
       </div>
@@ -81,17 +75,17 @@ export default function NavbarComponent({ children, activePage }) {
         </div>
       </div>
 
-      {/* <div
+      <div
         className={`absolute right-0 top-14 rounded-xl shadow-md overflow-hidden bg-white z-50 ${profile ? "scale-y-100" : "scale-y-0"
           }`}
         ref={wrapProfile}
       >
         <div className="flex items-center gap-6 px-8 py-6 rounded-b-xl shadow-md">
           <div className="h-16 bg-white border-4 border__secondary rounded-full aspect-square overflow-hidden">
-            <Image src="/images/avatar-150x150.jpg" width={150} height={150} />
+            <Image src="/avatar.jpg" width={150} height={150} />
           </div>
           <div className="pr-5">
-            <h6 className="text-lg font-extrabold text-gray-800">Muhammad No...</h6>
+            <h6 className="text-lg font-extrabold text-gray-800">Jhon Duck</h6>
             <h6 className="text-sm font-medium text-gray-600">Admin</h6>
           </div>
         </div>
@@ -103,13 +97,13 @@ export default function NavbarComponent({ children, activePage }) {
           </div>
           <div
             className="px-8 py-4 flex gap-5 hover__bg__light__primary hover:shadow-md cursor-pointer text__danger"
-            onClick={() => submitLogout()}
+            onClick={() => { }}
           >
             <FontAwesomeIcon icon={faPowerOff} />
             <label className="cursor-pointer font-semibold">Sign Out</label>
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }

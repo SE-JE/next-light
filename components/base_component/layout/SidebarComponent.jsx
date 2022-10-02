@@ -23,7 +23,8 @@ export default function SidebarComponent({
 	changeDarkMode,
 	menu,
 	basePath,
-	children
+	children,
+	close,
 }) {
 	const router = useRouter();
 	const [showSubmenu, setShowSubmenu] = useState([]);
@@ -87,19 +88,20 @@ export default function SidebarComponent({
 
 	return (
 		<>
-			<div className='container mx-auto grid min-h-screen grid-cols-9 gap-8'>
-				<div className='col-span-2 py-4'>
-					<div className="flex flex-col justify-between h-full bg-white rounded-xl overflow-hidden shadow">
-						<div className="m-4 px-6 py-4 flex gap-8 bg__primary rounded-xl">
-							{/* <img src="/logo.png" alt="logo" width={"35%"} /> */}
-							<h1 className="text-xl font-bold text-white">MY PROJECT</h1>
+			<div className='container mx-auto grid min-h-screen grid-cols-7 lg:grid-cols-9 gap-8'>
+				<div className={`${close ? "absolute scale-x-0 -translate-x-full" : "lg:col-span-2 scale-100"} py-4`}>
+					<div className="flex flex-col h-full bg-white rounded-xl overflow-hidden shadow">
+						<div className="m-4 lg:px-6 py-4 flex justify-center lg:justify-start gap-8 bg__primary rounded-xl">
+							{/* <img src="/logo.png" alt="logo" className='w-20' /> */}
+							<h1 className="text-xl font-bold text-white hidden lg:block">MY PROJECT</h1>
+							<h1 className="text-xl font-bold text-white block lg:hidden">MP</h1>
 						</div>
 
-						<div className="h-full pt-2 pb-4 px-2 overflow-auto scroll_control shadow__scrolly dark:bg-gray-700">
+						<div className="max-h-[calc(100vh-130px)] pt-2 pb-4 mb-4 px-2 overflow-y-auto scroll_control shadow__scrolly dark:bg-gray-700">
 							{menu.map((menu_head, menu_head_key) => {
 								return (
 									<React.Fragment key={menu_head_key}>
-										<div className="px-4 pt-4 pb-2 flex justify-between cursor-pointer" onClick={(e) => {
+										<div className="px-2 lg:px-4 pt-4 pb-2 flex justify-between cursor-pointer" onClick={(e) => {
 											if (menu_head.collapse) {
 												if (
 													!showMenu[0] ||
@@ -121,9 +123,10 @@ export default function SidebarComponent({
 												}
 											}
 										}}>
-											<h6 className="text-lg text-gray-500 dark:text-gray-300">
+											<h6 className="text-lg text-gray-500 dark:text-gray-300 hidden lg:block">
 												{menu_head.head}
 											</h6>
+											<div className='w-full h-1 bg-gray-300 rounded-full block lg:hidden'></div>
 											{menu_head.collapse && (
 												<FontAwesomeIcon
 													icon={faChevronDown}
@@ -159,8 +162,8 @@ export default function SidebarComponent({
 																(val) => val.path == router.asPath,
 															)[0] ||
 																(menuPath && router.asPath == menuPath || submenuActive)
-																? "text-white bg__primary mx-4 px-4 rounded-xl"
-																: "px-8 text-gray-400 dark:text-gray-200 hover__text__primary"
+																? "text-white bg__primary mx-2 lg:mx-4 lg:px-4 rounded-xl"
+																: "lg:px-8 text-gray-400 dark:text-gray-200 hover__text__primary"
 																}`}
 															onClick={(e) => {
 																if (
@@ -191,7 +194,7 @@ export default function SidebarComponent({
 																}
 															}}
 														>
-															<div className="flex items-center gap-4">
+															<div className="flex items-center justify-center lg:justify-start w-full gap-4">
 																{/* {(menuPath && router.asPath == menuPath) ||
 																	menu.submenu?.filter(
 																		(val) => val.path == router.asPath,
@@ -204,13 +207,13 @@ export default function SidebarComponent({
 																	icon={menu.icon}
 																	className="text-lg"
 																/>
-																<h6 className="">{menu.label}</h6>
+																<h6 className="hidden lg:block">{menu.label}</h6>
 															</div>
 
 															{menu.submenu && menu.submenu[0] && (
 																<FontAwesomeIcon
 																	icon={faChevronDown}
-																	className={`text-base ${showSubmenu[0] &&
+																	className={`text-base hidden lg:block ${showSubmenu[0] &&
 																		showSubmenu.includes(
 																			menu_head_key + "|" + menu_key,
 																		)
@@ -223,7 +226,7 @@ export default function SidebarComponent({
 
 														{menu.submenu && menu.submenu[0] && (
 															<div
-																className={`shadow-inner mx-4 py-2 rounded-lg bg-gray-50 intro__y ${showSubmenu[0] &&
+																className={`shadow-inner mx-2 lg:mx-4 lg:py-2 rounded-lg bg-gray-50 intro__y ${showSubmenu[0] &&
 																	showSubmenu.includes(
 																		menu_head_key + "|" + menu_key,
 																	)
@@ -237,7 +240,7 @@ export default function SidebarComponent({
 																	return (
 																		<Link href={submenuPath} key={submenu_key}>
 																			<a
-																				className={`flex items-center gap-5 mx-4 px-4 py-4 my-2 ${submenuPath &&
+																				className={`flex items-center gap-5 mx-1 lg:mx-4 justify-center lg:justify-start lg:px-4 py-4 my-1 lg:my-2 ${submenuPath &&
 																					router.asPath == submenuPath
 																					? "bg__primary text-white rounded-xl"
 																					: "text-gray-400 dark:text-gray-300 hover__text__primary"
@@ -247,7 +250,7 @@ export default function SidebarComponent({
 																					icon={submenu.icon}
 																					className="text-lg"
 																				/>
-																				<h6 className="font-semibold">
+																				<h6 className="font-semibold hidden lg:block">
 																					{submenu.label}
 																				</h6>
 																			</a>
@@ -266,7 +269,7 @@ export default function SidebarComponent({
 						</div>
 					</div>
 				</div>
-				<div className='col-span-7 py-4 max-h-screen overflow-auto scroll_control'>
+				<div className={`${close ? "col-span-9" : "col-span-6 xl:col-span-7"} py-4 max-h-screen overflow-auto scroll_control`}>
 					{/* <div className="h-max"> */}
 					{children}
 					{/* </div> */}

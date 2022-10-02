@@ -1,8 +1,10 @@
-import { faCube } from '@fortawesome/free-solid-svg-icons';
-import React from 'react';
-import { BreadcumbComponent, NavbarComponent, SidebarComponent } from '../../components/base_component';
+import { faBars, faCube } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from 'react';
+import { BreadcumbComponent, ButtonComponent, NavbarComponent, SidebarComponent } from '../../components/base_component';
 
 const Sidebar = () => {
+    const [sidebarActive, setSidebarActive] = useState(true);
+
     const menu = [
         {
             head: "Head of Menu",
@@ -70,20 +72,30 @@ const Sidebar = () => {
     ];
     return (
         <div>
-            <SidebarComponent menu={menu} basePath="/sidebar">
+            <SidebarComponent menu={menu} basePath="/sidebar" close={sidebarActive ? false : true}>
                 <NavbarComponent>
-                    <BreadcumbComponent
-                        items={[
-                            {
-                                link: "/",
-                                label: 'Home'
-                            },
-                            {
-                                link: "/",
-                                label: 'Menu'
-                            }
-                        ]}
-                    />
+                    <div className='flex gap-4 items-center'>
+                        <ButtonComponent
+                            icon={faBars}
+                            color={"primary"}
+                            square
+                            onClick={() => setSidebarActive(!sidebarActive)}
+                        />
+
+                        <BreadcumbComponent
+                            items={[
+                                {
+                                    link: "/",
+                                    label: 'Home'
+                                },
+                                {
+                                    link: "/",
+                                    label: 'Menu'
+                                }
+                            ]}
+                        />
+                    </div>
+
                 </NavbarComponent>
                 <div className='w-full bg-white py-48 rounded-xl shadow mt-8'>
 
