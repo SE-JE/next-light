@@ -52,12 +52,12 @@ export const get = async (
 
 
 export const post = async (path, data, params, contentType) => {
-  var newData = {};
-  data.forEach((value, key) => newData[key] = value);
+  // var newData = {};
+  // data.forEach((value, key) => newData[key] = value);
 
   try {
     return await axios
-      .post(`${API_URL}/${path}${params ? "?" + params : ""}`, newData, {
+      .post(`${API_URL}/${path}${params ? "?" + params : ""}`, data, {
         headers: {
           Authorization: Cookies.get(token_cookie_name) ? "Bearer " + Decrypt(Cookies.get(token_cookie_name)) : "",
           "Content-Type": contentType ? contentType : "application/json",
@@ -82,11 +82,11 @@ export const post = async (path, data, params, contentType) => {
 
 export const put = async (path, data, params, contentType) => {
   try {
-    // data.append("_method", "PUT");
-    var newData = {};
-    data.forEach((value, key) => newData[key] = value);
+    data.append("_method", "PUT");
+    // var newData = {};
+    // data.forEach((value, key) => newData[key] = value);
     return await axios
-      .put(`${API_URL}/${path}${params ? "?" + params : ""}`, newData, {
+      .put(`${API_URL}/${path}${params ? "?" + params : ""}`, data, {
         headers: {
           Authorization: Cookies.get(token_cookie_name) ? "Bearer " + Decrypt(Cookies.get(token_cookie_name)) : "",
           // "content-type": contentType ? contentType : "multipart/form-data",
