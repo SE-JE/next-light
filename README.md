@@ -27,6 +27,13 @@ npm install && npm run dev
 
 ### base components
 
+- crud
+- - form plus
+- - table crud
+- - table plus
+- formatting
+- - date formatting
+- - rupiah formatting
 - input
 - - Checkbox
 - - Input Button
@@ -35,53 +42,59 @@ npm install && npm run dev
 - - Input Date
 - - Input Default
 - - Input Editor
+- - Input File
 - - Input Image
 - - Input Multiple
-- - Input PDF
+- - Input Radio
+- - Input Rupiah
 - - Input Phone
 - - Input Star / Rating With Star
 - - Input Status
-- - Input Select
+- - Radio
+- - Select
 - - Input Multiple
+- Layout
+- - Bottom Sheet
+- - Floating Page
+- - Navbar
+- - Sidebar
+- Modal
+- - Modal
+- - Modal Confirm
+- - Modal Right
+- Navigasi/ Navigation
+- - Breadcumb
+- - Menu Bar
+- - Wizard
 - Bagde
-- Breadcumb
 - Button
 - Card
-- Icon Moon
+- Filter
 - Loading
 - Menu Bar
-- Modal
-- Modal Confirm
-- Modal Right
-- No Srr
+- No SSR
+- Shadow Scrool
 - Table
 - Validate
-- Wizard
-
-### Second Components
-
-- Bottom Select
-- Document Group
-- File Light
-- Import
-- Navbar
-- Sidebar Components
 
 ## Helpers API Available
 
 ### AUTH
+
 - login
 - check login
 - logout
 
 ### CRUD
+
 - get
 - post
-- put 
+- put
 - delete
 - download
 
 ## Encryption
+
 - Encrypt
 - Decrypt
 
