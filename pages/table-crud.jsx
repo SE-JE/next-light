@@ -8,7 +8,26 @@ export default function TableCrud() {
                 title="Data User"
                 urlPath={"users"}
                 exceptColumns={['id']}
-                exceptSorts={['name', 'gender', 'date']}
+                exceptSorts={['name', 'gender', 'bod']}
+                changeForm={{
+                    gender: {
+                        type: "select",
+                        options: [
+                            {
+                                label: "Male",
+                                value: "male",
+                            },
+                            {
+                                label: "Female",
+                                value: "female",
+                            }
+                        ],
+                    },
+                    bod: {
+                        label: "Date of birth",
+                        type: "date"
+                    }
+                }}
             />
         </>
     )

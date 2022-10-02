@@ -67,7 +67,7 @@ export default function MultipleDateComponent({
         `}
       >
         <label
-          htmlFor={name}
+          htmlFor={name + "_field"}
           className={`
             absolute z-10 
             ${value || focus ? `active` : ``} 
@@ -78,17 +78,17 @@ export default function MultipleDateComponent({
         >
           {label}
         </label>
-
+        <input type="hidden" name={name} value={value ? (!range ? moment(value).locale("id").format("YYYY-MM-DD") : moment(value[0]).locale("id").format("YYYY-MM-DD") + "|" + moment(value[1]).locale("id").format("YYYY-MM-DD")) : ""} />
         <input
           readOnly="readonly"
-          id={name}
+          id={name + "_field"}
           placeholder={focus ? placeholder : ""}
           value={value ? (!range ? moment(value).locale("id").format("DD MMMM YYYY") : moment(value[0]).locale("id").format("DD MMMM YYYY") + " - " + moment(value[1]).locale("id").format("DD MMMM YYYY")) : ""}
           className={`
             ${icon ? "pl-16 pr-5" : "pl-5 pr-5"}
             ${invalid ? " invalid" : ""}
           `}
-          name={name}
+          name={""}
           disabled={disabled}
           onFocus={() => {
             setFocus(true);
@@ -158,7 +158,7 @@ export default function MultipleDateComponent({
                 }}
                 minDate={minDate ? minDate : null}
                 maxDate={maxDate ? maxDate : null}
-                value={value}
+                // value={new Date(value)}
                 defaultView={defaultView}
                 selectRange={range}
               />

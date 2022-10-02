@@ -141,7 +141,7 @@ export default function SelectComponent({
             ${icon ? "pl-16 pr-5" : "pl-5 pr-5"}
             ${invalid ? " invalid" : ""}
           `}
-          name={name + "_field"}
+          name={""}
           disabled={disabled}
           onFocus={(e) => {
             setFocus(true);

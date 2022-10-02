@@ -66,7 +66,10 @@ export default function ModalRightComponent({
         <div
           className={`max-h-[calc(100vh-75px)] overflow-y-auto scroll_control px-8`}
         >
-          {children}
+          <div className='min-h-[calc(100vh-75px)]'>
+            {children}
+          </div>
+
         </div>
 
         {footer && (

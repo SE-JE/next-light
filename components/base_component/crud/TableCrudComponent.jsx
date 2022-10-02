@@ -10,6 +10,7 @@ export default function TableCrudComponent({
     exceptColumns,
     exceptSorts,
     customForm,
+    changeForm,
 }) {
     const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -34,6 +35,13 @@ export default function TableCrudComponent({
     const [dataSelected, setDataSelected] = useState(false);
 
     const [forms, setForms] = useState([]);
+
+
+    useEffect(() => {
+        if (customForm) {
+            setForms(customForm);
+        }
+    }, [customForm]);
 
     useEffect(async () => {
         setLoading(true)
@@ -81,11 +89,14 @@ export default function TableCrudComponent({
 
                     Object.keys(responseData.at(0)).map((keyName) => {
                         if ((!exceptColumns || !exceptColumns.includes(keyName))) {
+                            let custom = changeForm[keyName] ? changeForm[keyName] : {};
                             newForms.push({
-                                label: keyName.charAt(0).toUpperCase() + keyName.slice(1),
+                                type: custom.type ? custom.type : "text",
+                                label: custom.label ? custom.label : keyName.charAt(0).toUpperCase() + keyName.slice(1),
                                 name: keyName,
-                                placeholder: "Please enter " + keyName + "...",
-                                validate: {
+                                placeholder: custom.placeholder ? custom.placeholder : "Please enter " + keyName + "...",
+                                options: custom.options ? custom.options : [],
+                                validate: custom.validate ? custom.validate : {
                                     required: true,
                                 },
                             });
@@ -177,6 +188,18 @@ export default function TableCrudComponent({
         }
 
     }, [paginate, page, sort, search, filter, refresh]);
+
+    // useEffect(() => {
+    //     if (forms && forms[0] && changeForm) {
+    //         let formsUpdate = [];
+
+    //         forms.map((form, key) => {
+    //             formsUpdate.push({
+
+    //             })
+    //         })
+    //     }
+    // }, [forms, changeForm]);
 
     return (
         <>
