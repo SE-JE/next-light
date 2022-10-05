@@ -39,6 +39,10 @@ const Index = () => {
         <Link href="/form">
           <ButtonComponent label="Cek Form" bg={"primary"} />
         </Link>
+
+        <Link href="/chart">
+          <ButtonComponent label="Cek Chart" bg={"primary"} />
+        </Link>
       </div>
 
     </div>

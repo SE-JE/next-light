@@ -21,9 +21,9 @@ export const get = async (
         `${API_URL}/${path}?paginate=${paginate ? paginate : 0}` +
         (search ? `&search=${search}` : "") +
         (filter ? `&filter=${filter}` : "") +
-        (sortBy ? `&sort_by=${sortBy}` : "") +
+        (sortBy ? `&order_by=${sortBy}` : "") +
         (sortDirection
-          ? `&sort_direction=${sortDirection.toLowerCase()}`
+          ? `&order_direction=${sortDirection.toLowerCase()}`
           : "") +
         (page ? `&page=${page}` : ""),
 
