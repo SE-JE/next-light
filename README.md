@@ -25,57 +25,55 @@ npm install && npm run dev
 
 ## Components Available
 
-### base components
-
-- crud
-- - form plus
-- - table crud
-- - table plus
-- formatting
-- - date formatting
-- - rupiah formatting
-- input
-- - Checkbox
-- - Input Button
-- - Input Checkbox Group
-- - Input Count
-- - Input Date
-- - Input Default
-- - Input Editor
-- - Input File
-- - Input Image
-- - Input Multiple
-- - Input Radio
-- - Input Rupiah
-- - Input Phone
-- - Input Star / Rating With Star
-- - Input Status
-- - Radio
-- - Select
-- - Input Multiple
-- Layout
-- - Bottom Sheet
-- - Floating Page
-- - Navbar
-- - Sidebar
-- Modal
-- - Modal
-- - Modal Confirm
-- - Modal Right
-- Navigasi/ Navigation
-- - Breadcumb
-- - Menu Bar
-- - Wizard
-- Bagde
-- Button
-- Card
-- Filter
-- Loading
-- Menu Bar
-- No SSR
-- Shadow Scrool
-- Table
-- Validate
+- [x] crud
+- - [x] form plus
+- - [x] table crud
+- - [x] table plus
+- [x] formater
+- - [x] date format
+- - [x] rupiah format
+- [x] input
+- - [x] Checkbox
+- - [x] Input Button
+- - [x] Input Checkbox Group
+- - [x] Input Count
+- - [x] Input Date
+- - [x] Input Default
+- - [x] Input Editor
+- - [x] Input File
+- - [x] Input Image
+- - [x] Input Multiple
+- - [x] Input Radio
+- - [x] Input Rupiah
+- - [x] Input Phone
+- - [x] Input Star / Rating With Star
+- - [x] Input Status
+- - [x] Radio
+- - [x] Select
+- - [x] Input Multiple
+- [x] Layout
+- - [x] Bottom Sheet
+- - [x] Floating Page
+- - [x] Navbar
+- - [x] Sidebar
+- [x] Modal
+- - [x] Modal
+- - [x] Modal Confirm
+- - [x] Modal Right
+- [x] Navigasi/ Navigation
+- - [x] Breadcumb
+- - [x] Menu Bar
+- - [x] Wizard
+- [x] Bagde
+- [x] Button
+- [x] Card
+- [x] Filter
+- [x] Loading
+- [x] Menu Bar
+- [x] No SSR
+- [x] Shadow Scrool
+- [x] Table
+- [x] Validate
 
 ## Helpers API Available
 
