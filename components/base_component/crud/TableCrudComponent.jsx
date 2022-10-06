@@ -9,6 +9,8 @@ export default function TableCrudComponent({
     searchColumn,
     exceptColumns,
     exceptSorts,
+    exceptForms,
+    includeForms,
     customForm,
     changeForm,
 }) {
@@ -88,7 +90,7 @@ export default function TableCrudComponent({
                     let newForms = [];
 
                     Object.keys(responseData.at(0)).map((keyName) => {
-                        if ((!exceptColumns || !exceptColumns.includes(keyName))) {
+                        if ((!exceptColumns || !exceptColumns.includes(keyName) || !exceptForms.includes(keyName))) {
                             let custom = changeForm[keyName] ? changeForm[keyName] : {};
                             newForms.push({
                                 type: custom.type ? custom.type : "text",
@@ -102,6 +104,10 @@ export default function TableCrudComponent({
                             });
                         }
                     })
+
+                    if (includeForms && includeForms[0]) {
+                        newForms = [...newForms, ...includeForms];
+                    }
 
                     setForms(newForms)
                 }
