@@ -33,6 +33,8 @@ import ModalComponent from './modal/ModalComponent';
 import WizardComponent from './navigasi/WizardComponent';
 import SidebarComponent from './layout/SidebarComponent';
 import NavbarComponent from './layout/NavbarComponent';
+import NavbarBigestComponent from './layout/NavbarBigestComponent';
+import FooterComponent from './layout/FooterComponent';
 import BottomSheetComponent from './layout/BottomSheetComponent';
 import FloatingPageComponent from './layout/FloatingPageComponent';
 import FormPlusComponent from './crud/FormPlusComponent';
@@ -81,5 +83,7 @@ export {
   InputDiscountComponent,
   FilterComponent,
   TablePlusComponent,
-  TableCrudComponent
+  TableCrudComponent,
+  NavbarBigestComponent,
+  FooterComponent
 };
