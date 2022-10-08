@@ -25,6 +25,7 @@ ChartJS.register(
     RadialLinearScale
 );
 
+// color palete
 const color = {
     primary: "#5aafff",
     secondary: "#04a9ca",
@@ -32,6 +33,9 @@ const color = {
     warning: "#f57e2c",
     success: "#69c9ca"
 }
+
+// color end of gradient
+const gradientEndColor = 'rgba(0,0,0,0)';
 
 
 
@@ -103,7 +107,7 @@ export default function ChartComponent({ type, labels, datasets, title }) {
 
         Object.keys(newGradient).map((keyName) => {
             newGradient[keyName]?.addColorStop(type == "line" ? 0.15 : 0.2, color[keyName]);
-            newGradient[keyName]?.addColorStop(type == "line" ? 0.5 : 0.7, 'rgba(0,0,0,0)');
+            newGradient[keyName]?.addColorStop(type == "line" ? 0.5 : 0.7, gradientEndColor);
         })
 
         setGradient(newGradient)
