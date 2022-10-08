@@ -5,7 +5,7 @@ import { ButtonComponent } from '../components/base_component';
 const Index = () => {
   return (
     <div className='container mx-auto'>
-      <h1 className="my-8">LETS TRY NEXT LIGHT COMPONENT!</h1>
+      <h1 className="my-8">HELLO WORLD!</h1>
 
       <div className='flex flex-wrap gap-5'>
         <Link href="/component">
