@@ -152,13 +152,7 @@ export default function FormPlusComponent({
         setSubmitLoading(true)
 
         let formData = new FormData(e.target);
-        let response;
-
-        if (method == "put") {
-            response = await put(submitUrl, formData);
-        } else {
-            response = await post(submitUrl, formData);
-        }
+        let response = method == "put" ? await put(submitUrl, formData) : await post(submitUrl, formData);
 
 
         if (response?.status == 200 || response?.status == 201) {
