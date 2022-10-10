@@ -94,6 +94,8 @@ export default function SelectComponent({
           onChange(filteredSuggestions[activeSuggestion]);
         }
       } else if (e.keyCode === 38) {
+        e.preventDefault();
+
         if (activeSuggestion === 0) {
           return;
         }
@@ -101,6 +103,8 @@ export default function SelectComponent({
         setActiveSuggestion(activeSuggestion - 1);
         setValue(filteredSuggestions[activeSuggestion - 1]?.label);
       } else if (e.keyCode === 40) {
+        e.preventDefault();
+
         if (activeSuggestion + 1 >= filteredSuggestions.length) {
           return;
         }
