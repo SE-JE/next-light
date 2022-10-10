@@ -8,8 +8,6 @@ export default function TableCrudComponent({
     urlPath,
     searchColumn,
     exceptColumns,
-    changeColumns,
-    includeColumns,
     exceptSorts,
     exceptForms,
     includeForms,
@@ -35,7 +33,6 @@ export default function TableCrudComponent({
     const [refresh, setRefresh] = useState(false);
 
     const [data, setData] = useState([]);
-    const [dataOriginals, setDataOriginals] = useState([]);
     const [columns, setColumns] = useState([]);
     const [dataSelected, setDataSelected] = useState(false);
 
@@ -62,7 +59,6 @@ export default function TableCrudComponent({
 
         if (response?.status == 200 || response?.status == 204) {
             let responseData = response.data.data;
-            let originalData = await response.data.data;
 
             if (responseData?.at(0)) {
                 let newColumns = [];
@@ -71,11 +67,10 @@ export default function TableCrudComponent({
                 Object.keys(responseData.at(0)).map((keyName) => {
                     if ((!exceptColumns || !exceptColumns.includes(keyName))) {
                         newColumns.push({
-                            label: (changeColumns && changeColumns[keyName] && changeColumns[keyName].label) ? changeColumns[keyName].label : keyName.charAt(0).toUpperCase() + keyName.slice(1),
+                            label: keyName.charAt(0).toUpperCase() + keyName.slice(1),
                             selector: keyName,
-                            width: (changeColumns && changeColumns[keyName] && changeColumns[keyName].width) ? changeColumns[keyName].width : "200px",
-                            sortable: (!exceptSorts || !exceptSorts.includes(keyName)),
-                            filter: (changeColumns && changeColumns[keyName] && changeColumns[keyName].filter) ? changeColumns[keyName].filter : null,
+                            width: "200px",
+                            sortable: (!exceptSorts || !exceptSorts.includes(keyName))
                         });
                     }
 
@@ -95,9 +90,8 @@ export default function TableCrudComponent({
                     let newForms = [];
 
                     Object.keys(responseData.at(0)).map((keyName) => {
-                        if ((!exceptForms?.includes(keyName))) {
+                        if ((!exceptColumns || !exceptColumns.includes(keyName) || !exceptForms?.includes(keyName))) {
                             let custom = (changeForm && changeForm[keyName]) ? changeForm[keyName] : {};
-
                             newForms.push({
                                 type: custom.type ? custom.type : "text",
                                 label: custom.label ? custom.label : keyName.charAt(0).toUpperCase() + keyName.slice(1),
@@ -107,11 +101,9 @@ export default function TableCrudComponent({
                                 validate: custom.validate ? custom.validate : {
                                     required: true,
                                 },
-                                col: custom.col ? custom.col : 12,
                             });
                         }
                     })
-
 
                     if (includeForms && includeForms[0]) {
                         newForms = [...newForms, ...includeForms];
@@ -122,25 +114,16 @@ export default function TableCrudComponent({
 
                 setColumns(newColumns)
 
-
                 responseData.map((item, key) => {
-                    let items = { ...item };
-                    changeColumns && Object.keys(changeColumns).map((keyName) => {
-                        if (changeColumns[keyName].custom) {
-                            items[keyName] = changeColumns[keyName].custom(items);
-                        }
-                    });
-                    // console.log(item);
-
                     newData.push({
-                        ...items,
+                        ...item,
                         action: (
                             <>
                                 <ButtonComponent
                                     icon={faEye}
                                     label={"View"}
-                                    bg="light__primary"
-                                    color="primary"
+                                    bg="light__secondary"
+                                    color="secondary"
                                     size={"sm"}
                                     rounded
                                     onClick={() => {
@@ -179,45 +162,38 @@ export default function TableCrudComponent({
 
 
                 setData(newData)
-                setDataOriginals(originalData)
             } else {
                 if (!customForm) {
                     let newForms = [];
 
-                    response.data.columns?.map((column) => {
-                        if ((!exceptForms?.includes(column))) {
-                            let custom = (changeForm && changeForm[column]) ? changeForm[column] : {};
-
-                            newForms.push({
-                                type: custom.type ? custom.type : "text",
-                                label: custom.label ? custom.label : column.charAt(0).toUpperCase() + column.slice(1),
-                                name: column,
-                                placeholder: custom.placeholder ? custom.placeholder : "Please enter " + column + "...",
-                                options: custom.options ? custom.options : [],
-                                validate: custom.validate ? custom.validate : {
-                                    required: true,
-                                },
-                                col: custom.col ? custom.col : 12,
-                            });
-                        }
+                    response.data.columns.map((column) => {
+                        newForms.push({
+                            label: column.charAt(0).toUpperCase() + column.slice(1),
+                            name: column,
+                            placeholder: "Please enter " + column + "...",
+                            validate: {
+                                required: true,
+                            },
+                        });
                     })
-
-                    if (includeForms && includeForms[0]) {
-                        newForms = [...newForms, ...includeForms];
-                    }
 
                     setForms(newForms)
                 }
                 setData([]);
             }
 
-            setLoading(false)
+            setTimeout(() => {
+                setLoading(false)
+            }, 1000);
         } else {
             setIsError(true)
-            setLoading(false)
+
+            setTimeout(() => {
+                setLoading(false)
+            }, 1000);
         }
 
-    }, [paginate, page, sort, search, filter, refresh, changeColumns]);
+    }, [paginate, page, sort, search, filter, refresh]);
 
     // useEffect(() => {
     //     if (forms && forms[0] && changeForm) {
@@ -231,11 +207,9 @@ export default function TableCrudComponent({
     //     }
     // }, [forms, changeForm]);
 
-    // console.log(dataOriginals);
-
     return (
         <>
-            <div className='container mx-auto p-2'>
+            <div className='container mx-auto p-8'>
                 <h1 className='text-xl font-bold mb-4'>{title}</h1>
 
                 {!isError ? (
@@ -244,7 +218,6 @@ export default function TableCrudComponent({
                             <>
                                 <ButtonComponent
                                     bg="primary"
-                                    color={"secondary"}
                                     label="Add New Data"
                                     icon={faPlus}
                                     size="sm"
@@ -292,11 +265,11 @@ export default function TableCrudComponent({
                 }}
             >
                 <FormPlusComponent
-                    submitUrl={dataSelected === false ? urlPath : urlPath + "/" + dataOriginals?.at(dataSelected).id}
+                    submitUrl={dataSelected === false ? urlPath : urlPath + "/" + data?.at(dataSelected).id}
                     method={dataSelected === false ? "post" : "put"}
                     confirmation
                     forms={forms}
-                    defaultValue={dataSelected === false ? null : dataOriginals?.at(dataSelected)}
+                    defaultValue={dataSelected === false ? null : data?.at(dataSelected)}
                     onSuccess={() => {
                         setModalForm(false)
                         setRefresh(!refresh)
