@@ -36,6 +36,8 @@ export default function InputImageComponent({
       } else {
         setImage(STORAGE_URL + "/" + setInputValue);
       }
+    } else {
+      setImage("");
     }
   }, [setInputValue]);
 
