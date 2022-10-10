@@ -90,8 +90,8 @@ export default function TableCrudComponent({
                     let newForms = [];
 
                     Object.keys(responseData.at(0)).map((keyName) => {
-                        if ((!exceptColumns || !exceptColumns.includes(keyName) || !exceptForms.includes(keyName))) {
-                            let custom = changeForm[keyName] ? changeForm[keyName] : {};
+                        if ((!exceptColumns || !exceptColumns.includes(keyName) || !exceptForms?.includes(keyName))) {
+                            let custom = (changeForm && changeForm[keyName]) ? changeForm[keyName] : {};
                             newForms.push({
                                 type: custom.type ? custom.type : "text",
                                 label: custom.label ? custom.label : keyName.charAt(0).toUpperCase() + keyName.slice(1),
