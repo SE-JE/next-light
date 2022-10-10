@@ -167,7 +167,7 @@ export default function TableComponent({
     <div className='pb-5'>
       <div className=''>
         {topBar && (
-          <div className='p-3 rounded-xl bg-white shadow-sm'>
+          <div className='p-3 rounded-xl bg__secondary shadow-sm'>
             {topBar}
           </div>
         )}
@@ -184,7 +184,7 @@ export default function TableComponent({
                       setFloatingPerpage(false);
                     }, 100);
                   }}
-                  className='pl-4 pr-12 py-3 w-24 text-md font-semibold rounded-md border-b border-gray-300 focus:shadow-inner'
+                  className='pl-4 pr-12 py-3 w-24 text-md font-semibold rounded-md border-b border-gray-300 bg__secondary focus:shadow-inner'
                   value={setPaginate}
                   readOnly={"readonly"}
                 />
@@ -196,7 +196,7 @@ export default function TableComponent({
                 </label>
 
                 <div
-                  className={`absolute top-full right-1/2 translate-x-1/2 bg-white shadow-md rounded-lg py-2 ${!floatingPerpage ? "scale-0" : "scale-100"
+                  className={`absolute top-full right-1/2 translate-x-1/2 bg__secondary shadow-md rounded-lg py-2 ${!floatingPerpage ? "scale-0" : "scale-100"
                     }`}
                 >
                   {[10, 20, 30, 50, 100].map((data, key) => {
@@ -258,7 +258,7 @@ export default function TableComponent({
                   </label>
 
                   <div
-                    className={`absolute top-full right-1/2 translate-x-1/2 bg-white shadow-md rounded-lg py-2 ${!floatingSearchColumn ? "scale-0" : "scale-100"
+                    className={`absolute top-full right-1/2 translate-x-1/2 bg__secondary shadow-md rounded-lg py-2 ${!floatingSearchColumn ? "scale-0" : "scale-100"
                       }`}>
                     <div
                       className={`px-4 py-3 w-32 cursor-pointer hover__bg__light__primary ${!setSearchColumn?.selector ? "bg__light__primary text__primary" : ""}`}
@@ -315,7 +315,7 @@ export default function TableComponent({
                   placeholder={"Search Data..."}
                   value={inputSearch}
                   onChange={(e) => setInputSearch(e.target.value)}
-                  className={`${loading ? "skeleton-loading" : ""} py-3 pl-4 pr-12 w-full font-semibold text-md ${searchColumn ? "rounded-r-lg" : "rounded-lg"} bg-white border-b border-gray-300`}
+                  className={`${loading ? "skeleton-loading" : ""} py-3 pl-4 pr-12 w-full placeholder:font-normal font-semibold text-md ${searchColumn ? "rounded-r-lg" : "rounded-lg"} bg__secondary border-b border-gray-300`}
                   autoComplete={"off"}
                 />
 
@@ -369,7 +369,7 @@ export default function TableComponent({
                   <div className='flex flex-col gap-y-2'>
                     {[1, 2, 3, 4].map((item, key) => {
                       return (
-                        <div className='flex items-center gap-4 bg-white rounded-lg shadow-sm relative p-3' key={key}>
+                        <div className='flex items-center gap-4 bg__secondary rounded-lg shadow-sm relative p-3' key={key}>
                           <div className="w-16 px-6 py-4 font-medium skeleton__loading"></div>
                           {[1, 2, 3, 4, 5].map((column, key) => {
                             return (
@@ -390,44 +390,60 @@ export default function TableComponent({
               </>
             ) : (
               <>
-                  {!data || !data[0] ? (
+                {!data || !data[0] ? (
                   <div className='flex justify-center p-5'>
-                      <div className='flex flex-col items-center justify-center gap-8 p-5'>
-                        <img
-                          src='/204.svg'
-                          width={"200px"}
-                          alt='server error'
-                        />
-                        <h1 className='text-2xl font-bold'>Empty Data</h1>
-                      </div>
+                    <div className='flex flex-col items-center justify-center gap-8 p-5'>
+                      <img
+                        src='/204.svg'
+                        width={"200px"}
+                        alt='server error'
+                      />
+                      <h1 className='text-2xl font-bold'>Empty Data</h1>
+                    </div>
                   </div>
                 ) : (
-                      <div
-                        className='min-w-full'
-                        style={{
-                          width: width ? width : "max-content"
-                        }}
-                      >
-                        {
-                          // ? Head Column
-                        }
-                        <div className='flex gap-4 mb-2'>
-                          <div className="w-16 px-6 py-4 font-bold">
-                            #
-                          </div>
-                          {columns && columns.map((column, key) => {
-                            return (
-                              <div
-                                key={key}
-                                className={`px-6 py-4 font-bold`}
-                                style={{
-                                  width: column.width ? column.width : "200px"
-                                }}
+                  <div
+                    className='min-w-full'
+                    style={{
+                      width: width ? width : "max-content"
+                    }}
+                  >
+                    {
+                      // ? Head Column
+                    }
+                    <div className='flex gap-4 mb-2'>
+                      <div className="w-16 px-6 py-4 font-bold">
+                        #
+                      </div>
+                      {columns && columns.map((column, key) => {
+                        return (
+                          <div
+                            key={key}
+                            className={`px-6 py-4 font-bold`}
+                            style={{
+                              width: column.width ? column.width : "200px"
+                            }}
 
+                          >
+                            <div className='flex justify-between gap-2 items-center'>
+                              <div
+                                className={`w-full uppercase ${column.sortable ? "cursor-pointer" : ""}`}
+                                onClick={() => {
+                                  if (column.sortable && onChangeSort) {
+                                    onChangeSort({
+                                      selector: column.selector,
+                                      direction: (!setSort || setSort.selector != column.selector) ? "desc" : setSort.direction == "desc" ? "asc" : "desc",
+                                    })
+                                  }
+                                }}
                               >
-                                <div className='flex justify-between gap-2 items-center'>
+                                {column.label?.replace("_", " ")}
+                              </div>
+
+                              <div className='relative flex gap-4'>
+                                {(setSort && setSort.selector == column.selector) && (
                                   <div
-                                    className={`w-full ${column.sortable ? "cursor-pointer" : ""}`}
+                                    className={`${column.sortable ? "cursor-pointer" : ""}`}
                                     onClick={() => {
                                       if (column.sortable && onChangeSort) {
                                         onChangeSort({
@@ -437,136 +453,121 @@ export default function TableComponent({
                                       }
                                     }}
                                   >
-                                    {column.label}
-                                  </div>
-
-                                  <div className='relative flex gap-4'>
-                                    {(setSort && setSort.selector == column.selector) && (
-                                      <div
-                                        className={`${column.sortable ? "cursor-pointer" : ""}`}
-                                        onClick={() => {
-                                          if (column.sortable && onChangeSort) {
-                                            onChangeSort({
-                                              selector: column.selector,
-                                              direction: (!setSort || setSort.selector != column.selector) ? "desc" : setSort.direction == "desc" ? "asc" : "desc",
-                                            })
-                                          }
-                                        }}
-                                      >
-                                        {setSort.direction == "desc" ? (
-                                          <FontAwesomeIcon icon={faArrowDownShortWide} className="text-lg" />
-                                        ) : (
-                                          <FontAwesomeIcon icon={faArrowUpShortWide} className="text-lg" />
-                                        )}
-                                      </div>
+                                    {setSort.direction == "desc" ? (
+                                      <FontAwesomeIcon icon={faArrowDownShortWide} className="text-lg text-gray-400" />
+                                    ) : (
+                                        <FontAwesomeIcon icon={faArrowUpShortWide} className="text-lg text-gray-400" />
                                     )}
-
-                                    {column.filter && (
-                                      <>
-                                        <div
-                                          className={`cursor-pointer ${setFilterValue?.filter((prev) => prev.column == column.selector)?.at(0)?.value?.at(0) ? "text__primary" : ""}`}
-                                          onClick={() => {
-                                            setFloatingFilter(floatingFilter == column.selector ? false : column.selector)
-                                          }}
-                                        >
-                                          <FontAwesomeIcon icon={faSliders} className="text-lg" />
-                                        </div>
-
-                                        <div
-                                          ref={el => wrapFilter.current[column.selector] = el}
-                                          className={`
-                                              absolute -bottom-2 z-10 w-64 translate-y-full right-0 p-4 bg-white rounded-lg shadow
-                                              ${floatingFilter == column.selector ? "" : "scale-y-0"}
-                                            `}
-                                        >
-                                          <div className='flex justify-between mb-3'>
-                                            <label className='text-sm'>Filter by {column.label}</label>
-                                            <div
-                                              className='text-sm text__secondary cursor-pointer'
-                                              onClick={() => onChangeFilter(setFilterValue?.filter((prev) => prev.column != column.selector))}
-                                            >
-                                              Reset
-                                            </div>
-                                          </div>
-
-                                          <FilterComponent
-                                            type={column.filter.type}
-                                            options={column.filter.options}
-                                            onChange={(e) => {
-                                              onChangeFilter([...setFilterValue?.filter((prev) => prev.column != column.selector), {
-                                                column: column.selector,
-                                                value: e,
-                                              }])
-                                            }}
-                                            setInputValue={setFilterValue?.filter((prev) => prev.column == column.selector)[0] ? setFilterValue?.filter((prev) => prev.column == column.selector)[0].value : []}
-                                          />
-                                        </div>
-                                      </>
-                                    )}
-
-                                  </div>
-
-                                </div>
-
-                              </div>
-                            )
-                          })}
-                        </div>
-
-                        {
-                          // ? Body Column
-                        }
-                        <div className='flex flex-col gap-y-2'>
-                          {(data && data[0]) && data.map((item, key) => {
-                            return (
-                              <div className='flex items-center gap-4 bg-white rounded-lg shadow-sm relative' key={key}>
-                                <div className="w-16 px-6 py-4 font-medium">
-                                  {key + 1}
-                                </div>
-                                {columns && columns.map((column, key) => {
-                                  return (
-                                    <div
-                                      key={key}
-                                      className="px-6 py-4 text-lg font-medium"
-                                      style={{
-                                        width: column.width ? column.width : "200px"
-                                      }}
-                                    >
-                                      {item[column.selector] ? item[column.selector] : "-"}
-                                    </div>
-                                  )
-                                })}
-                                <div className="flex-1 flex justify-end gap-2 px-6 py-4">
-                                  {item.action}
-                                </div>
-
-                                {(item.action && floatingAction) && (
-                                  <div
-                                    className='sticky hover:-right-2 bg__background -right-5 z-30 cursor-pointer flex shadow rounded-l-lg'
-                                    onClick={() =>
-                                      floatingActionActive == key
-                                        ? setFloatingActionActive(-1)
-                                        : setFloatingActionActive(key)
-                                    }>
-                                    <div className=' pl-5 pr-7 py-5'>
-                                      <FontAwesomeIcon icon={floatingActionActive != key ? faChevronLeft : faChevronRight} className="text__primary" />
-                                    </div>
-
-                                    <div
-                                      className={`py-2 flex gap-2 ${floatingActionActive == key
-                                        ? "w-max pl-2 pr-8"
-                                        : "w-0"
-                                        }`}>
-                                      {item.action}
-                                    </div>
                                   </div>
                                 )}
 
+                                {column.filter && (
+                                  <>
+                                    <div
+                                      className={`cursor-pointer ${setFilterValue?.filter((prev) => prev.column == column.selector)?.at(0)?.value?.at(0) ? "text__primary" : "text-gray-400"}`}
+                                      onClick={() => {
+                                        setFloatingFilter(floatingFilter == column.selector ? false : column.selector)
+                                      }}
+                                    >
+                                      <FontAwesomeIcon icon={faSliders} className="text-lg" />
+                                    </div>
+
+                                    <div
+                                      ref={el => wrapFilter.current[column.selector] = el}
+                                      className={`
+                                              absolute -bottom-2 border-b-2 border-gray-400 z-10 w-64 translate-y-full right-0 py-4 bg__secondary rounded-lg shadow
+                                              ${floatingFilter == column.selector ? "" : "scale-y-0"}
+                                            `}
+                                    >
+                                      <div className='flex justify-between px-4 pb-4 mb-4 border-b border-gray-400'>
+                                        <label className='text-sm'>Filter By {column.label}</label>
+                                        <div
+                                          className='text-sm text__primary cursor-pointer'
+                                          onClick={() => onChangeFilter(setFilterValue?.filter((prev) => prev.column != column.selector))}
+                                        >
+                                          Reset
+                                        </div>
+                                      </div>
+
+                                      <div className='px-4'>
+                                        <FilterComponent
+                                          type={column.filter.type}
+                                          options={column.filter.options}
+                                          onChange={(e) => {
+                                            onChangeFilter([...setFilterValue?.filter((prev) => prev.column != column.selector), {
+                                              column: column.selector,
+                                              value: e,
+                                            }])
+                                          }}
+                                          setInputValue={setFilterValue?.filter((prev) => prev.column == column.selector)[0] ? setFilterValue?.filter((prev) => prev.column == column.selector)[0].value : []}
+                                        />
+                                      </div>
+
+                                    </div>
+                                  </>
+                                )}
+
                               </div>
-                            )
-                          })}
-                        </div>
-                      </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    {
+                      // ? Body Column
+                    }
+                    <div className='flex flex-col gap-y-2'>
+                      {(data && data[0]) && data.map((item, key) => {
+                        return (
+                          <div className='flex items-center gap-4 bg__secondary rounded-lg shadow-sm relative' key={key}>
+                            <div className="w-16 px-6 py-4 font-medium">
+                              {key + 1}
+                            </div>
+                            {columns && columns.map((column, key) => {
+                              return (
+                                <div
+                                  key={key}
+                                  className="px-6 py-4 text-base font-medium"
+                                  style={{
+                                    width: column.width ? column.width : "200px"
+                                  }}
+                                >
+                                  {item[column.selector] ? item[column.selector] : "-"}
+                                </div>
+                              )
+                            })}
+                            <div className="flex-1 flex justify-end gap-2 px-6 py-4">
+                              {item.action}
+                            </div>
+
+                            {(item.action && floatingAction) && (
+                              <div
+                                className='sticky hover:-right-2 bg__background -right-5 z-30 cursor-pointer flex shadow rounded-l-lg'
+                                onClick={() =>
+                                  floatingActionActive == key
+                                    ? setFloatingActionActive(-1)
+                                    : setFloatingActionActive(key)
+                                }>
+                                <div className=' pl-5 pr-7 py-5'>
+                                  <FontAwesomeIcon icon={floatingActionActive != key ? faChevronLeft : faChevronRight} className="text__primary" />
+                                </div>
+
+                                <div
+                                  className={`py-2 flex gap-2 ${floatingActionActive == key
+                                    ? "w-max pl-2 pr-8"
+                                    : "w-0"
+                                    }`}>
+                                  {item.action}
+                                </div>
+                              </div>
+                            )}
+
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
                 )}
               </>
             )}
@@ -578,7 +579,7 @@ export default function TableComponent({
             <div className='flex items-center gap-3'>
               {setPage > 1 && (
                 <div
-                  className='p-3 text-gray-600 cursor-pointer'
+                  className='p-3 text-gray-400 cursor-pointer'
                   onClick={() => onChangePage(setPage - 1)}>
                   <FontAwesomeIcon icon={faChevronLeft} />
                 </div>
@@ -587,11 +588,11 @@ export default function TableComponent({
               {pagination.first && (
                 <>
                   <div
-                    className='px-5 py-2 font-bold bg-white rounded-md cursor-pointer hover:scale-110'
+                    className='px-5 py-2 font-bold bg__secondary rounded-md cursor-pointer hover:scale-110'
                     onClick={() => onChangePage(1)}>
                     1
                   </div>
-                  <div className='px-2 py-2 font-bold text-gray-600 rounded-md'>
+                  <div className='px-2 py-2 font-bold text-gray-400 rounded-md'>
                     ...
                   </div>
                 </>
@@ -603,7 +604,7 @@ export default function TableComponent({
                       key={key}
                       className={`py-2 px-5 rounded-md font-bold ${page == setPage
                         ? "bg__light__primary text__primary"
-                        : "bg-white cursor-pointer"
+                        : "bg__secondary cursor-pointer"
                         } hover:scale-110`}
                       onClick={() => onChangePage(page)}>
                       {page}
@@ -612,7 +613,7 @@ export default function TableComponent({
                 })}
               {pagination.last && (
                 <>
-                  <div className='px-2 py-2 font-bold text-gray-600 rounded-md'>
+                  <div className='px-2 py-2 font-bold text-gray-400 rounded-md'>
                     ...
                   </div>
                   <div
@@ -624,14 +625,14 @@ export default function TableComponent({
               )}
               {setPage < pagination.lastPage && (
                 <div
-                  className='p-3 text-gray-600 cursor-pointer'
+                  className='p-3 text-gray-400 cursor-pointer'
                   onClick={() => onChangePage(setPage + 1)}>
                   <FontAwesomeIcon icon={faChevronRight} />
                 </div>
               )}
             </div>
             <div className='relative flex items-center gap-5 px-3'>
-              <div className='text-gray-600'>
+              <div className='text-gray-400'>
                 {setPaginate * setPage - setPaginate + 1}
                 {" "} - {" "}
                 {setPage < pagination.lastPage
