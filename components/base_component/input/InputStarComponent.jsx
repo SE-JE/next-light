@@ -58,7 +58,7 @@ export default function StarComponent({ setInputValue, onChange, disabled, class
           }}
         />
         {(focus || value) && (
-          <div className='flex gap-3 absolute top-1/2 -translate-y-1/2 absolute left-5'>
+          <div className='flex gap-3 absolute top-1/2 -translate-y-1/2 left-5'>
             {[1, 2, 3, 4, 5].map((num, key) => {
               if (num <= value) {
                 return (
