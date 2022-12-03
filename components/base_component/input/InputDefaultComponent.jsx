@@ -32,7 +32,10 @@ export default function InputDefaultComponent({
   setRef,
   className,
   onValidate,
-  onlyAlphabet
+  onlyAlphabet,
+  autoUppercase,
+  maxWord,
+
 }) {
   const [focus, setFocus] = useState(false);
   const [value, setValue] = useState("");
@@ -61,17 +64,29 @@ export default function InputDefaultComponent({
   }, [setInputValue]);
 
   useEffect(() => {
-    if (value && typeof value === "string" && onlyAlphabet) {
+    if (value && typeof value === "string") {
       let val = value.split("");
       let newVal = "";
 
-      val.map((data, index) => {
-        if (data == " ") {
-          newVal += " ";
-        } else if (/[A-Za-z]/.test(data)) {
-          newVal += data;
-        }
-      });
+      if (onlyAlphabet) {
+        val.map((data, index) => {
+          if (data == " ") {
+            newVal += " ";
+          } else if (/[A-Za-z]/.test(data)) {
+            newVal += data;
+          }
+        });
+      } else {
+        newVal = value;
+      }
+
+      if (autoUppercase) {
+        newVal = newVal.toUpperCase();
+      }
+
+      if (maxWord) {
+        newVal = newVal.slice(0, maxWord)
+      }
 
       setValue(newVal);
     }
@@ -140,9 +155,6 @@ export default function InputDefaultComponent({
         <label
           htmlFor={name}
           className={`
-            absolute z-10 
-            ${value || focus ? `active` : ``} 
-            ${iconLeft ? "ml-14" : "ml-3"}
             ${focus ? "text__primary" : ""}
             ${invalid ? "text__danger" : ""}
           `}
@@ -150,78 +162,86 @@ export default function InputDefaultComponent({
           {label}
         </label>
 
-        <input
-          ref={setRef}
-          type={type ? type : "text"}
-          value={value}
-          placeholder={focus ? placeholder : ""}
-          id={name}
-          className={`
+        <div className='relative'>
+          <input
+            ref={setRef}
+            type={type ? type : "text"}
+            value={value}
+            placeholder={placeholder}
+            id={name}
+            className={`
             ${iconLeft ? "pl-16 pr-5" : icon ? "pl-5 pr-14" : "pl-5 pr-5"}
             ${invalid ? " invalid" : ""}
           `}
-          name={name}
-          disabled={disabled}
-          onFocus={(e) => {
-            setFocus(true);
-            if (onFocus) {
-              onFocus();
-            }
+            name={name}
+            disabled={disabled}
+            onFocus={(e) => {
+              setFocus(true);
+              if (onFocus) {
+                onFocus();
+              }
 
-            if (autoComplete) {
-              filterSuggestion(e);
-            }
-          }}
-          onBlur={(e) => {
-            setTimeout(() => {
-              setFocus(false);
-            }, 100);
+              if (autoComplete) {
+                filterSuggestion(e);
+              }
+            }}
+            onBlur={(e) => {
+              setTimeout(() => {
+                setFocus(false);
+              }, 100);
 
-            if (onBlur) {
-              onBlur();
-            }
-          }}
-          onChange={(e) => {
-            setValue(e.target.value);
-            setFirst(false);
+              if (onBlur) {
+                onBlur();
+              }
+            }}
+            onChange={(e) => {
+              setValue(e.target.value);
 
-            if (!validate) {
-              setInvalid("");
-            }
+              setFirst(false);
 
-            if (onChange) {
-              onChange(e.target.value);
-            }
+              if (!validate) {
+                setInvalid("");
+              }
 
-            if (autoComplete) {
-              filterSuggestion(e);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (autoComplete) {
-              onKeyDownSuggestion(e);
-            }
-          }}
-          autoComplete={"off"}
-        />
+              if (onChange) {
+                onChange(e.target.value);
+              }
 
-        {icon && (
-          <FontAwesomeIcon
-            className={`
-              absolute text-gray-400 text-xl 
+              if (autoComplete) {
+                filterSuggestion(e);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (autoComplete) {
+                onKeyDownSuggestion(e);
+              }
+            }}
+            autoComplete={"off"}
+          />
+
+          {icon && (
+            <FontAwesomeIcon
+              className={`
+              absolute text-gray-400 text-xl top-1/2 -translate-y-1/2
               ${iconLeft ? "left-1 ml-5" : "right-1 mr-5"} 
               ${onClick && "cursor-pointer"} 
               ${focus ? "text__primary" : ""}
               ${invalid ? "text__danger" : ""}
             `}
-            icon={icon}
-            onClick={(e) => {
-              if (onClick) {
-                onClick(e);
-              }
-            }}
-          />
-        )}
+              icon={icon}
+              onClick={(e) => {
+                if (onClick) {
+                  onClick(e);
+                }
+              }}
+            />
+          )}
+
+          {maxWord && (
+            <div className='absolute right-1 mr-5 top-1/2 -translate-y-1/2 text-gray-400 '>{value.length}/{maxWord}</div>
+          )}
+        </div>
+
 
         {autoComplete && showSuggestions && filteredSuggestions.length ? (
           <div>
@@ -272,7 +292,7 @@ export default function InputDefaultComponent({
           ""
         )}
 
-        {validate && !first && focus && (
+        {validate && !first && (
           <ValidateComponent
             type={"text"}
             {...validate}
@@ -287,7 +307,7 @@ export default function InputDefaultComponent({
         )}
 
         {invalid && (
-          <small className='block px-2 pl-5 -bottom-6 text-sm text-left text__danger absolute'>
+          <small className='block text-sm text-left text__danger mt-2'>
             {invalid}
           </small>
         )}

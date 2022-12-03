@@ -38,7 +38,10 @@ export default function InputCountComponent({
   subFix,
   min,
   max,
-  msgErrorMax
+  msgErrorMax,
+  hideButton,
+  inputClassName,
+  maxWord,
 }) {
   const [focus, setFocus] = useState(false);
   const [value, setValue] = useState("");
@@ -95,6 +98,10 @@ export default function InputCountComponent({
         }, 5000);
       }
 
+      if (maxWord) {
+        newVal = newVal.slice(0, maxWord)
+      }
+
       setValue(newVal);
 
       if (onChange) {
@@ -117,153 +124,160 @@ export default function InputCountComponent({
         <label
           htmlFor={name}
           className={`
-            absolute z-10 
-            ${value || focus ? `active` : ``} 
-            ${iconLeft ? "ml-14" : "ml-3"}
             ${focus ? "text__primary" : ""}
             ${invalid ? "text__danger" : ""}
           `}
         >
           {label}
         </label>
-        <input
-          ref={setRef}
-          type={'text'}
-          inputMode="numeric"
-          value={value ? subFix ? value + " " + subFix : value : ""}
-          id={name}
-          className={`
-            ${iconLeft ? "pl-16 pr-5" : icon ? "pl-5 pr-14" : "pl-5 pr-5"}
-            ${invalid ? " invalid" : ""}
-          `}
-          name={name}
-          disabled={disabled}
-          placeholder={focus ? placeholder : ""}
-          onFocus={(e) => {
-            setFocus(true);
 
-            if (e.target.value == "") {
-              setValue(0)
-            }
-
-            if (onFocus) {
-              onFocus();
-            }
-            if (autoComplete) {
-              filterSuggestion(e);
-            }
-          }}
-          onBlur={(e) => {
-            setTimeout(() => {
-              setFocus(false);
-            }, 100);
-
-            if (onBlur) {
-              onBlur();
-            }
-          }}
-          onChange={(e) => {
-            setValue(e.target.value);
-            setFirst(false);
-
-
-            if (!validate) {
-              setInvalid("");
-            }
-
-
-            if (autoComplete) {
-              filterSuggestion(e);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (autoComplete) {
-              onKeyDownSuggestion(e);
-            }
-          }}
-          autoComplete={"off"}
-        />
-
-
-        {icon && (
-          <FontAwesomeIcon
+        <div className='relative'>
+          <input
+            ref={setRef}
+            type={'text'}
+            inputMode="numeric"
+            value={value ? subFix ? value + " " + subFix : value : ""}
+            id={name}
             className={`
-              absolute text-gray-400 text-xl 
-              ${iconLeft ? "left-1 ml-5" : "right-1 mr-5"} 
-              ${onClick && "cursor-pointer"} 
-              ${focus ? "text__primary" : ""}
-              ${invalid ? "text__danger" : ""}
+              ${iconLeft ? "pl-16 pr-5" : icon ? "pl-5 pr-14" : "pl-5 pr-5"}
+              ${invalid ? " invalid" : ""}
+              ${inputClassName}
             `}
-            icon={icon}
-            onClick={(e) => {
-              if (onClick) {
-                onClick(e);
+            name={name}
+            disabled={disabled}
+            placeholder={placeholder}
+            onFocus={(e) => {
+              setFocus(true);
+
+              if (e.target.value == "") {
+                setValue(0)
+              }
+
+              if (onFocus) {
+                onFocus();
+              }
+              if (autoComplete) {
+                filterSuggestion(e);
               }
             }}
+            onBlur={(e) => {
+              setTimeout(() => {
+                setFocus(false);
+              }, 100);
+
+              if (onBlur) {
+                onBlur(e.target.value);
+              }
+            }}
+            onChange={(e) => {
+              setValue(e.target.value);
+              setFirst(false);
+
+
+              if (!validate) {
+                setInvalid("");
+              }
+
+
+              if (autoComplete) {
+                filterSuggestion(e);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (autoComplete) {
+                onKeyDownSuggestion(e);
+              }
+            }}
+            autoComplete={"off"}
           />
-        )}
 
-        {focus ? (
-          <label htmlFor={name} className='flex gap-3 absolute right-1 mr-4'>
-            <div className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${focus
-              ? "bg__light__primary"
-              : "bg-gray-300"
-              }`} onMouseDown={() => {
-                setTimeout(() => {
-                  setFocus(true)
-                }, 110)
 
-              }} onMouseUp={(e) => {
-                setValue(String(parseInt(value) - 1));
-                setTimeout(() => {
-                  setFocus(true);
-                }, 120);
-              }}>
-              <FontAwesomeIcon
-                className={` text-gray-500 ${size == "sm" ? "text-sm" : "text-base"
-                  } ${focus
-                    ? !invalid
-                      ? "text__primary"
-                      : "text__danger"
-                    : !invalid
-                      ? ""
-                      : "text__danger"
-                  }`}
-                icon={faMinus}
+          {icon && (
+            <FontAwesomeIcon
+              className={`
+                absolute text-gray-400 text-xl top-1/2 -translate-y-1/2
+                ${iconLeft ? "left-1 ml-5" : "right-1 mr-5"} 
+                ${onClick && "cursor-pointer"} 
+                ${focus ? "text__primary" : ""}
+                ${invalid ? "text__danger" : ""}
+              `}
+              icon={icon}
+              onClick={(e) => {
+                if (onClick) {
+                  onClick(e);
+                }
+              }}
+            />
+          )}
 
-              />
-            </div>
+          {!hideButton && focus ? (
+            <label htmlFor={name} className='absolute right-1 mr-4 top-1/2 -translate-y-1/2'>
+              <div className='flex gap-3 '>
+                <div className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${focus
+                  ? "bg__light__primary"
+                  : "bg-gray-300"
+                  }`} onMouseDown={() => {
+                    setTimeout(() => {
+                      setFocus(true)
+                    }, 110)
 
-            <div className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${focus
-              ? "bg__light__primary"
-              : "bg-gray-300"
-              }`} onMouseDown={() => {
-                setTimeout(() => {
-                  setFocus(true)
-                }, 110)
+                  }} onMouseUp={(e) => {
+                    setValue(String(parseInt(value) - 1));
+                    setTimeout(() => {
+                      setFocus(true);
+                    }, 120);
+                  }}>
+                  <FontAwesomeIcon
+                    className={` text-gray-500 ${size == "sm" ? "text-sm" : "text-base"
+                      } ${focus
+                        ? !invalid
+                          ? "text__primary"
+                          : "text__danger"
+                        : !invalid
+                          ? ""
+                          : "text__danger"
+                      }`}
+                    icon={faMinus}
 
-              }} onMouseUp={(e) => {
-                setValue(String(parseInt(value) + 1));
-                setTimeout(() => {
-                  setFocus(true);
-                }, 120);
-              }}>
-              <FontAwesomeIcon
-                className={` text-gray-500 ${size == "sm" ? "text-sm" : "text-base"
-                  } ${focus
-                    ? !invalid
-                      ? "text__primary"
-                      : "text__danger"
-                    : !invalid
-                      ? ""
-                      : "text__danger"
-                  }`}
-                icon={faPlus}
+                  />
+                </div>
 
-              />
-            </div>
-          </label>
-        ) : ""}
+                <div className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${focus
+                  ? "bg__light__primary"
+                  : "bg-gray-300"
+                  }`} onMouseDown={() => {
+                    setTimeout(() => {
+                      setFocus(true)
+                    }, 110)
+
+                  }} onMouseUp={(e) => {
+                    setValue(String(parseInt(value) + 1));
+                    setTimeout(() => {
+                      setFocus(true);
+                    }, 120);
+                  }}>
+                  <FontAwesomeIcon
+                    className={` text-gray-500 ${size == "sm" ? "text-sm" : "text-base"
+                      } ${focus
+                        ? !invalid
+                          ? "text__primary"
+                          : "text__danger"
+                        : !invalid
+                          ? ""
+                          : "text__danger"
+                      }`}
+                    icon={faPlus}
+
+                  />
+                </div>
+              </div>
+            </label>
+          ) : ""}
+
+          {maxWord && (
+            <div className='absolute right-1 mr-5 top-1/2 -translate-y-1/2 text-gray-400 '>{value.length}/{maxWord}</div>
+          )}
+        </div>
 
         {validate && !first && focus && (
           <ValidateComponent
@@ -280,7 +294,7 @@ export default function InputCountComponent({
         )}
       </div>
       {invalid && (
-        <small className='block px-2 pl-5 mb-3 -mt-1 text-sm text-left text__danger'>
+        <small className='block text-sm text-left text__danger mt-2'>
           {invalid}
         </small>
       )}

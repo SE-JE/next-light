@@ -10,10 +10,11 @@ export default function CheckBoxComponent({
   color,
   onChange,
   checked,
-  textSize
+  textSize,
+  value
 }) {
   return (
-    <div className='flex items-center gap-3 2xl:gap-6 relative'>
+    <div className='flex items-center gap-4 2xl:gap-6 relative'>
       <label
         className={`${className} cover__checkbox__control checkbox__${color ? color : "primary"
           } text-sm`}>
@@ -21,14 +22,16 @@ export default function CheckBoxComponent({
           type='checkbox'
           className='opacity-0'
           id={name}
+          name={name}
           onChange={onChange}
           checked={checked}
+          value={value}
         />
         <span className='checkbox__control'></span>
       </label>
       <label
         htmlFor={name}
-        className={`text-${textSize ? textSize : "lg"} cursor-pointer ${checked ? "text-gray-700 font-bold" : "text-gray-500 font-medium"
+        className={`text-${textSize ? textSize : "base"} cursor-pointer ${checked ? "text-gray-500 font-bold" : "text-gray-400 font-medium"
           }`}>
         {label}
       </label>

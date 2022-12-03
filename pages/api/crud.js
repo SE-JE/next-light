@@ -56,6 +56,7 @@ export const post = async (path, data, params, contentType) => {
   // data.forEach((value, key) => newData[key] = value);
 
   try {
+    return await axios.get(CSRF_URL + '/sanctum/csrf-cookie').then(async () => {
     return await axios
       .post(`${API_URL}/${path}${params ? "?" + params : ""}`, data, {
         headers: {
@@ -74,6 +75,7 @@ export const post = async (path, data, params, contentType) => {
         console.clear();
         return err.response;
       });
+    })
   } catch (error) {
     console.clear();
     return error;
@@ -85,6 +87,7 @@ export const put = async (path, data, params, contentType) => {
     data.append("_method", "PUT");
     // var newData = {};
     // data.forEach((value, key) => newData[key] = value);
+    return await axios.get(CSRF_URL + '/sanctum/csrf-cookie').then(async () => {
     return await axios
       .put(`${API_URL}/${path}${params ? "?" + params : ""}`, data, {
         headers: {
@@ -104,6 +107,7 @@ export const put = async (path, data, params, contentType) => {
         console.clear();
         return err.response;
       });
+    })
   } catch (error) {
     console.clear();
     return error;

@@ -93,9 +93,6 @@ export default function InputDiscountComponent({
         <label
           htmlFor={name}
           className={`
-            absolute z-10 
-            ${value || focus ? `active` : ``} 
-            ${iconLeft ? "ml-14" : "ml-3"}
             ${focus ? "text__primary" : ""}
             ${invalid ? "text__danger" : ""}
           `}
@@ -103,104 +100,109 @@ export default function InputDiscountComponent({
           {label}
         </label>
 
-        <input
-          type={"text"}
-          inputMode="numeric"
-          value={value}
-          placeholder={focus ? placeholder : ""}
-          maxLength={validate && validate.max && validate.max}
-          className={`
-            ${iconLeft ? "pl-20 pr-5" : icon ? `${isPercent ? "pl-5" : "pl-14"} pr-14` : `${isPercent ? "pl-5" : "pl-14"} pr-5`}
-            ${invalid ? " invalid" : ""}
-          `}
-          name={name}
-          id={name}
-          disabled={disabled}
-          onFocus={() => {
-            setFocus(true);
-            if (onFocus) {
-              onFocus();
-            }
-          }}
-          onBlur={() => {
-            setTimeout(() => {
-              setFocus(false);
-            }, 100);
+        <div className="relative">
 
-            if (onBlur) {
-              onBlur();
-            }
-            // if (!value) {
-            //   setInvalid(false);
-            // }
-          }}
-          onChange={(e) => {
-            if (e.target.value.length <= 18) {
-              setValue(e.target.value);
-              if (onChange) {
-                onChange(e.target.value);
-              }
-            }
-          }}
-          autoComplete={"off"}
-        />
-
-        {icon && (
-          <FontAwesomeIcon
+          <input
+            type={"text"}
+            inputMode="numeric"
+            value={value}
+            placeholder={focus ? placeholder : ""}
+            maxLength={validate && validate.max && validate.max}
             className={`
-              absolute text-gray-400 text-xl 
-              ${iconLeft ? "left-1 ml-5" : "right-1 mr-5"} 
-              ${onClick && "cursor-pointer"} 
-              ${focus ? "text__primary" : ""}
-              ${invalid ? "text__danger" : ""}
+              ${iconLeft ? "pl-20 pr-5" : icon ? `${isPercent ? "pl-5" : "pl-14"} pr-16` : `${isPercent ? "pl-5" : "pl-16"} pr-5`}
+              ${invalid ? " invalid" : ""}
             `}
-            icon={icon}
-            onClick={(e) => {
-              if (onClick) {
-                onClick(e);
+            name={name}
+            id={name}
+            disabled={disabled}
+            onFocus={() => {
+              setFocus(true);
+              if (onFocus) {
+                onFocus();
               }
             }}
+            onBlur={() => {
+              setTimeout(() => {
+                setFocus(false);
+              }, 100);
+
+              if (onBlur) {
+                onBlur();
+              }
+              // if (!value) {
+              //   setInvalid(false);
+              // }
+            }}
+            onChange={(e) => {
+              if (e.target.value.length <= 18) {
+                setValue(e.target.value);
+                if (onChange) {
+                  onChange(e.target.value);
+                }
+              }
+            }}
+            autoComplete={"off"}
           />
-        )}
 
-        {(focus || value) && (
-          <label
-            htmlFor={name}
-            className={`absolute text-lg flex ${icon ? "mr-16" : "right-1 mr-5"}`}
-          >
-            <div
-              className={`px-4 py-2 cursor-pointer ${isPercent ? "bg__light__primary text__primary" : "bg-gray-100"} rounded-l-lg`}
-              onMouseDown={() => {
-                setIsPercent(true)
-                setTimeout(() => {
-                  setFocus(true);
-                }, 120);
+          {icon && (
+            <FontAwesomeIcon
+              className={`
+                absolute text-gray-400 text-xl 
+                ${iconLeft ? "left-1 ml-5" : "right-1 mr-5"} 
+                ${onClick && "cursor-pointer"} 
+                ${focus ? "text__primary" : ""}
+                ${invalid ? "text__danger" : ""}
+              `}
+              icon={icon}
+              onClick={(e) => {
+                if (onClick) {
+                  onClick(e);
+                }
               }}
-            >
-              <FontAwesomeIcon icon={faPercent} />
-            </div>
-            <div
-              className={`px-4 py-2 cursor-pointer ${isPercent ? "bg-gray-100" : "bg__light__primary text__primary"} rounded-r-lg`}
-              onMouseDown={() => {
-                setIsPercent(false)
-                setTimeout(() => {
-                  setFocus(true);
-                }, 120);
-              }}
-            >
-              <FontAwesomeIcon icon={faRupiahSign} />
-            </div>
-          </label>
-        )}
+            />
+          )}
 
-        {(focus || value) && !isPercent && (
-          <div
-            className={`absolute text-lg pt-4 ${iconLeft ? "ml-16" : "left-1 ml-5"}`}
-          >
-            {/* <FontAwesomeIcon icon={faRupiahSign} /> */}
-            Rp.
-          </div>
-        )}
+          {(focus || value) && (
+            <label
+              htmlFor={name}
+              className={`absolute top-1/2 -translate-y-1/2 text-lg ${icon ? "mr-16" : "right-1 mr-5"}`}
+            >
+              <div className="flex">
+                <div
+                  className={`px-4 py-2 cursor-pointer ${isPercent ? "bg__light__primary text__primary" : "bg-gray-100"} rounded-l-lg`}
+                  onMouseDown={() => {
+                    setIsPercent(true)
+                    setTimeout(() => {
+                      setFocus(true);
+                    }, 120);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPercent} />
+                </div>
+                <div
+                  className={`px-4 py-2 cursor-pointer ${isPercent ? "bg-gray-100" : "bg__light__primary text__primary"} rounded-r-lg`}
+                  onMouseDown={() => {
+                    setIsPercent(false)
+                    setTimeout(() => {
+                      setFocus(true);
+                    }, 120);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faRupiahSign} />
+                </div>
+              </div>
+            </label>
+          )}
+
+          {(focus || value) && !isPercent && (
+            <div
+              className={`absolute text-lg top-1/2 -translate-y-1/2 ${iconLeft ? "ml-16" : "left-1 ml-5"}`}
+            >
+              {/* <FontAwesomeIcon icon={faRupiahSign} /> */}
+              Rp.
+            </div>
+          )}
+        </div>
 
         {validate && focus && value && (
           <ValidateComponent

@@ -20,7 +20,9 @@ export default function FormPlusComponent({
     confirmation,
     defaultValue,
     onSuccess,
-    method
+    method,
+    customAction,
+    includePayload,
 }) {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [modalConfirm, setModalConfirm] = useState(false);
@@ -152,8 +154,12 @@ export default function FormPlusComponent({
         setSubmitLoading(true)
 
         let formData = new FormData(e.target);
-        let response = method == "put" ? await put(submitUrl, formData) : await post(submitUrl, formData);
 
+        includePayload && Object.keys(includePayload).map((key) => {
+            formData.append(key, includePayload[key])
+        })
+
+        let response = method == "put" ? await put(submitUrl, formData) : await post(submitUrl, formData);
 
         if (response?.status == 200 || response?.status == 201) {
             setFormValues([])
@@ -206,7 +212,21 @@ export default function FormPlusComponent({
                 {title && <h4 className='text-xl text-gray-600 font-semibold mb-6'>{title}</h4>}
                 <div className='grid grid-cols-12 gap-8'>
                     {forms.map((form, key) => {
-                        if (form?.type == "select") {
+                        if (form?.type == "custom") {
+                            return (
+                                <div
+                                    style={{
+                                        gridColumn: `span ${form?.col ? form.col : "12"} / span ${form?.col ? form.col : "12"}`
+                                    }}
+                                >
+                                    {form.custom({
+                                        formValues: FormValues,
+                                        formErrors: FormErrors,
+                                        setFormValues: (e) => setFormValues(e),
+                                    })}
+                                </div>
+                            )
+                        } else if (form?.type == "select") {
                             return (
                                 <div
                                     style={{
@@ -320,6 +340,76 @@ export default function FormPlusComponent({
                                     />
                                 </div>
                             )
+                        } else if (form?.type == "otp") {
+                            return (
+                                <div
+                                    style={{
+                                        gridColumn: `span ${form?.col ? form.col : "12"} / span ${form?.col ? form.col : "12"}`
+                                    }}
+                                >
+                                    <label className='text-lg font-medium'>{form.label}</label>
+                                    <InputOtpComponent
+                                        name={form.name}
+                                        max={form.max}
+                                        error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
+                                    />
+                                </div>
+                            )
+                        } else if (form?.type == "map") {
+                            return (
+                                <div
+                                    style={{
+                                        gridColumn: `span ${form?.col ? form.col : "12"} / span ${form?.col ? form.col : "12"}`,
+                                        gridRow: `span ${form?.row ? form.row : "1"} / span ${form?.row ? form.row : "1"}`
+                                    }}
+                                >
+                                    <InputMapComponent
+                                        name={form.name}
+                                        label={form.label}
+                                        error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
+                                    />
+                                </div>
+                            )
+                        } else if (form?.type == "time") {
+                            return (
+                                <div
+                                    style={{
+                                        gridColumn: `span ${form?.col ? form.col : "12"} / span ${form?.col ? form.col : "12"}`,
+                                        gridRow: `span ${form?.row ? form.row : "1"} / span ${form?.row ? form.row : "1"}`
+                                    }}
+                                >
+                                    <InputTimeComponent
+                                        name={form.name}
+                                        label={form.label}
+                                        error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
+                                    />
+                                </div>
+                            )
+                        } else if (form?.type == "count") {
+                            return (
+                                <div
+                                    style={{
+                                        gridColumn: `span ${form?.col ? form.col : "12"} / span ${form?.col ? form.col : "12"}`,
+                                        gridRow: `span ${form?.row ? form.row : "1"} / span ${form?.row ? form.row : "1"}`
+                                    }}
+                                >
+                                    <InputCountComponent
+                                        name={form.name}
+                                        label={form.label}
+                                        placeholder={form.placeholder}
+                                        error={FormErrors.filter((error) => error.name == form.name)?.at(0)?.msg}
+                                        onChange={(e) => setFormValues([...FormValues.filter((value) => value.name != form.name), { name: form.name, value: e }])}
+                                        setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
+                                        disabled={form.disabled}
+                                    />
+                                </div>
+                            )
                         } else {
                             return (
                                 <>
@@ -343,6 +433,9 @@ export default function FormPlusComponent({
                                                 }
                                             }}
                                             setInputValue={FormValues.filter((value) => value.name == form.name)?.at(0) ? FormValues.filter((value) => value.name == form.name)?.at(0).value : ""}
+                                            onlyAlphabet={form.onlyAlphabet}
+                                            autoUppercase={form.autoUppercase}
+                                            maxWord={form.maxWord}
                                         />
                                     </div>
 
@@ -374,15 +467,18 @@ export default function FormPlusComponent({
                         }
                     })}
                 </div>
-                <div className='flex justify-end mt-12'>
-                    <ButtonComponent
-                        type={"submit"}
-                        label="Submit"
-                        icon={faArrowRightToBracket}
-                        bg="primary"
-                        loading={submitLoading}
-                    />
-                </div>
+                {customAction ? customAction : (
+                    <div className='flex justify-end mt-12'>
+                        <ButtonComponent
+                            type={"submit"}
+                            label="Kirimkan"
+                            icon={faArrowRightToBracket}
+                            bg="primary"
+                            color={"secondary"}
+                            loading={submitLoading}
+                        />
+                    </div>
+                )}
             </form>
 
 

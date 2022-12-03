@@ -150,11 +150,11 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .form__control {
-	@apply flex items-center w-full relative;
+	@apply w-full relative;
 }
 
 .form__control label {
-	@apply px-2 text-lg font-medium;
+	@apply block font-medium mb-1.5;
 }
 
 .form__control label.active {
@@ -162,11 +162,12 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .form__control input {
-	background: #ffffff;
-	@apply pt-8 pb-3 w-full text-lg font-semibold rounded-xl transition duration-150 ease-in-out focus:outline-none border-b-[3px] border-gray-300;
+	background: var(--background);
+	@apply py-3 2xl:py-4 w-full text-lg font-medium rounded-xl transition duration-150 ease-in-out focus:outline-none border-[1px] border-gray-300 placeholder:font-normal;
 }
 
-.form__control input:focus-visible {
+.form__control input:focus-visible,
+textarea.form__control:focus-visible {
 	border-color: var(--light-primary);
 }
 
@@ -180,7 +181,7 @@ input::-webkit-calendar-picker-indicator {
 	appearance: none;
 	-webkit-print-color-adjust: exact;
 	color-adjust: exact;
-	border: 3px rgba(0, 0, 0, 0.2) solid;
+	border: 3px #d1d5db solid;
 	border-radius: 50%;
 	height: 22px;
 	width: 22px;
@@ -229,7 +230,7 @@ input::-webkit-calendar-picker-indicator {
 	height: 22px;
 	width: 22px;
 	border-width: 2px;
-	@apply rounded-md border-gray-300 bg-gray-200;
+	@apply rounded-lg border-neutral-300;
 }
 
 .checkbox__primary input:checked ~ .checkbox__control {
@@ -255,11 +256,11 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .cover__checkbox__control .checkbox__control:after {
-	left: 7px;
-	top: 2px;
+	left: 7.5px;
+	top: 2.5px;
 	width: 7px;
 	height: 12px;
-	border: solid white;
+	border: solid var(--background);
 	border-width: 0 2.8px 2.8px 0;
 	-webkit-transform: rotate(45deg);
 	-ms-transform: rotate(45deg);

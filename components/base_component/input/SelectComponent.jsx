@@ -28,7 +28,8 @@ export default function SelectComponent({
   onSearch,
   searchServer,
   onValidate,
-  hideOption
+  hideOption,
+  loading
 }) {
   const [focus, setFocus] = useState(false);
   const [value, setValue] = useState("");
@@ -38,6 +39,7 @@ export default function SelectComponent({
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [keydown, setKeydown] = useState(false);
+  const [first, setFirst] = useState(true);
 
   useEffect(() => {
     setActiveSuggestion(-1);
@@ -123,26 +125,25 @@ export default function SelectComponent({
           ${disabled ? "opacity-60" : ""} 
           ${className}`}
       >
-        <label
+        {label && <label
           htmlFor={name + "_field"}
           className={`
-            absolute z-10 
-            ${value || focus ? `active` : ``} 
-            ${icon ? "ml-14" : "ml-3"}
             ${focus ? "text__primary" : ""}
             ${invalid ? "text__danger" : ""}
+            ${loading ? "inline-block skeleton__loading min-w-[80px] mb-1" : ""}
           `}
         >
           {label}
-        </label>
+        </label>}
         <input type="hidden" name={name} value={options.filter((option) => option.label == value).at(0) ? options.filter((option) => option.label == value).at(0).value : ""} />
+        <div className={`relative ${loading ? "skeleton__loading" : ""}`}>
         <input
           readOnly={!searchable ? "readonly" : ""}
           value={value}
           id={name + "_field"}
-          placeholder={focus ? placeholder : ""}
+            placeholder={placeholder}
           className={`
-            ${icon ? "pl-16 pr-5" : "pl-5 pr-5"}
+            ${icon ? "pl-16 pr-5" : "pl-5 pr-24"}
             ${invalid ? " invalid" : ""}
           `}
           name={""}
@@ -187,6 +188,8 @@ export default function SelectComponent({
             }
           }}
           onChange={(e) => {
+            setFirst(false);
+
             if (searchable) {
               setValue(e.target.value);
             }
@@ -213,7 +216,7 @@ export default function SelectComponent({
         {icon && (
           <FontAwesomeIcon
             className={`
-              absolute left-1 ml-5 text-xl text-gray-400
+              absolute left-1 ml-5 text-xl text-gray-400 top-1/2 -translate-y-1/2
               ${onClick && "cursor-pointer"} 
               ${focus ? "text__primary" : ""}
               ${invalid ? "text__danger" : ""}
@@ -230,7 +233,7 @@ export default function SelectComponent({
         {value && (
           <FontAwesomeIcon
             className={`
-              absolute right-20 text-xl text-gray-400
+              absolute right-16 text-xl text-gray-400 top-1/2 -translate-y-1/2
               ${onClick && "cursor-pointer"} 
               ${focus ? "text__primary" : ""}
               ${invalid ? "text__danger" : ""}
@@ -238,13 +241,14 @@ export default function SelectComponent({
             icon={faTimes}
             onClick={(e) => {
               setValue("")
+              onChange && onChange(null);
             }}
           />
         )}
 
         <label
           onClick={() => setFocus(!disabled ? !focus : false)}
-          className='absolute mr-5 right-1 text-gray-400'>
+            className='absolute mr-5 right-1 text-gray-400 top-1/2 -translate-y-1/2'>
           <FontAwesomeIcon
             className={`text-xl -mt-2 ${focus
               ? !invalid
@@ -259,11 +263,12 @@ export default function SelectComponent({
           />
         </label>
 
+
         {!disabled && options && options[0] && showSuggestions && (
           <div>
             <ul
               className={`
-                  absolute suggestions left-0 mt-10 rounded-xl w-full bg-white shadow text-left z-30 overflow-hidden py-3 ease-in-out 
+                  absolute suggestions left-0 mt-4 rounded-xl w-full bg-gray-100 shadow text-left z-30 overflow-hidden py-3 ease-in-out 
                   ${focus ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0"}
               `}
             // style={{
@@ -271,14 +276,14 @@ export default function SelectComponent({
             // }}
             >
               <ul
-                className='overflow-x-hidden overflow-y-auto my__scroll_no_shadow'
+                  className='overflow-x-hidden overflow-y-auto scroll_control'
                 style={{ maxHeight: "170px" }}>
                 {filteredSuggestions.map((suggestion, index) => {
                   return (
                     <li
                       className={`
-                        w-full px-5 py-3 list-none text-black cursor font-medium hover__bg__light__primary cursor-pointer 
-                        ${index == activeSuggestion ? "bg__light__primary text__primary" : ""}
+                        w-full px-5 py-3 list-none cursor font-medium hover__bg__light__primary cursor-pointer
+                        ${index == activeSuggestion ? "bg__light__primary" : ""}
                       `}
                       key={index}
                       onMouseDown={() => {
@@ -291,6 +296,7 @@ export default function SelectComponent({
                       }}
 
                       onMouseUp={() => {
+                        setFirst(false);
                         setKeydown(false);
                         setValue(suggestion.label);
                         setFilteredSuggestions([]);
@@ -315,8 +321,8 @@ export default function SelectComponent({
             </ul>
           </div>
         )}
-
-        {validate && focus && (
+        </div>
+        {validate && !first && (
           <ValidateComponent
             {...validate}
             value={value}
@@ -331,7 +337,7 @@ export default function SelectComponent({
       </div>
 
       {invalid && (
-        <small className='block px-2 pl-5 -bottom-6 text-sm text-left text__danger absolute'>
+        <small className='block text-sm text-left text__danger mt-2'>
           {invalid}
         </small>
       )}

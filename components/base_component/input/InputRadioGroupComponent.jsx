@@ -26,23 +26,22 @@ export default function InputRadioGroupComponent({
     }, [setInputValue]);
 
     return (
-        <>
+        <div>
+            <label
+                htmlFor={name}
+                className="font-medium"
+            >
+                {label}
+            </label>
             <div
                 className={`
-                    w-full relative bg-white py-2 px-3 border-b-[3px] border-gray-300 rounded-xl
+                    w-full relative bg__background mt-1 py-3 2xl:py-4 px-5 border-[1px] border-gray-300 rounded-xl
                     ${disabled ? "opacity-60" : ""} 
                     ${className}`}
             >
-                <label
-                    htmlFor={name}
-                    className={`
-                        z-10 text-base text-gray-400
-                    `}
-                >
-                    {label}
-                </label>
 
-                <div className='max-h-[180px] scroll_control overflow-y-auto pt-1'>
+
+                <div className='max-h-[180px] scroll_control overflow-y-auto'>
                     <div
                         className={`flex gap-4`}>
                         {options && options.map((option, key) => {
@@ -73,6 +72,6 @@ export default function InputRadioGroupComponent({
                     </small>
                 )}
             </div>
-        </>
+        </div>
     )
 }

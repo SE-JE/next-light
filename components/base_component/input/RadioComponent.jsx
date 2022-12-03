@@ -32,8 +32,8 @@ function RadioComponent({
         <label
           htmlFor={id ? id : name}
           className={`
-            ml-2 whitespace-nowrap font-semibold text-gray-600 text-${textSize ? textSize : "lg"}
-            ${checked ? "text-gray-700 font-bold" : "text-gray-500 font-medium"}
+            ml-2 whitespace-nowrap font-medium text-${textSize ? textSize : "lg"}
+            ${checked ? "text-gray-500 font-semibold" : "text-gray-400 font-medium"}
           `}
         >
           {label}

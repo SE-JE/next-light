@@ -84,9 +84,6 @@ export default function InputRupiahComponent({
         <label
           htmlFor={name}
           className={`
-            absolute z-10 
-            ${value || focus ? `active` : ``} 
-            ${iconLeft ? "ml-14" : "ml-3"}
             ${focus ? "text__primary" : ""}
             ${invalid ? "text__danger" : ""}
           `}
@@ -94,71 +91,73 @@ export default function InputRupiahComponent({
           {label}
         </label>
 
-        <input
-          type={"text"}
-          inputMode="numeric"
-          value={value}
-          placeholder={focus ? placeholder : ""}
-          maxLength={validate && validate.max && validate.max}
-          className={`
-            ${iconLeft ? "pl-20 pr-5" : icon ? "pl-14 pr-14" : "pl-14 pr-5"}
-            ${invalid ? " invalid" : ""}
-          `}
-          name={name}
-          id={name}
-          disabled={disabled}
-          onFocus={() => {
-            setFocus(true);
-            if (onFocus) {
-              onFocus();
-            }
-          }}
-          onBlur={() => {
-            setFocus(false);
-            if (onBlur) {
-              onBlur();
-            }
-            // if (!value) {
-            //   setInvalid(false);
-            // }
-          }}
-          onChange={(e) => {
-            if (e.target.value.length <= 18) {
-              setValue(e.target.value);
-              if (onChange) {
-                onChange(e.target.value);
-              }
-            }
-          }}
-          autoComplete={"off"}
-        />
-
-        {icon && (
-          <FontAwesomeIcon
+        <div className='relative'>
+          <input
+            type={"text"}
+            inputMode="numeric"
+            value={value}
+            placeholder={placeholder}
+            maxLength={validate && validate.max && validate.max}
             className={`
-              absolute text-gray-400 text-xl 
-              ${iconLeft ? "left-1 ml-5" : "right-1 mr-5"} 
-              ${onClick && "cursor-pointer"} 
-              ${focus ? "text__primary" : ""}
-              ${invalid ? "text__danger" : ""}
+              ${iconLeft ? "pl-20 pr-5" : icon ? "pl-16 pr-14" : "pl-16 pr-5"}
+              ${invalid ? " invalid" : ""}
             `}
-            icon={icon}
-            onClick={(e) => {
-              if (onClick) {
-                onClick(e);
+            name={name}
+            id={name}
+            disabled={disabled}
+            onFocus={() => {
+              setFocus(true);
+              if (onFocus) {
+                onFocus();
               }
             }}
+            onBlur={() => {
+              setFocus(false);
+              if (onBlur) {
+                onBlur();
+              }
+              // if (!value) {
+              //   setInvalid(false);
+              // }
+            }}
+            onChange={(e) => {
+              if (e.target.value.length <= 18) {
+                setValue(e.target.value);
+                if (onChange) {
+                  onChange(e.target.value);
+                }
+              }
+            }}
+            autoComplete={"off"}
           />
-        )}
 
-        {(focus || value) && (
+          {icon && (
+            <FontAwesomeIcon
+              className={`
+                absolute text-gray-400 text-xl top-1/2 -translate-y-1/2
+                ${iconLeft ? "left-1 ml-5" : "right-1 mr-5"} 
+                ${onClick && "cursor-pointer"} 
+                ${focus ? "text__primary" : ""}
+                ${invalid ? "text__danger" : ""}
+              `}
+              icon={icon}
+              onClick={(e) => {
+                if (onClick) {
+                  onClick(e);
+                }
+              }}
+            />
+          )}
+
+          {/* {(focus || value) && ( */}
           <div
-            className={`absolute text-lg pt-4 ${iconLeft ? "ml-16" : "left-1 ml-5"}`}
+            className={`absolute top-1/2 -translate-y-1/2 text-lg ${iconLeft ? "ml-16" : "left-1 ml-5"}`}
           >
             {/* <FontAwesomeIcon icon={faRupiahSign} /> */}
             Rp.
           </div>
-        )}
+          {/* )} */}
+        </div>
 
         {validate && focus && value && (
           <ValidateComponent
@@ -172,12 +171,13 @@ export default function InputRupiahComponent({
             }}
           />
         )}
+
+        {invalid && (
+          <small className='block text-sm text-left text__danger mt-2'>
+            {invalid}
+          </small>
+        )}
       </div>
-      {invalid && (
-        <small className="block px-2 text-left -mt-4 mb-6 pl-5 text-sm text__danger">
-          {invalid}
-        </small>
-      )}
     </>
   );
 }

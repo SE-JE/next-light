@@ -1,84 +1,78 @@
-import React, {
-  useEffect,
-  useState,
-} from 'react';
-
+import React, { useEffect, useState } from 'react'
 import CheckBoxComponent from './CheckBoxComponent';
+import RadioComponent from './RadioComponent';
 
-export default function InputCheckboxGroupComponent({
+export default function InputRadioGroupComponent({
+  name,
+  disabled,
+  validate,
+  error,
+  setInputValue,
   label,
+  className,
   options,
   col,
-  setInputValue,
-  onChange,
-  name,
-  className,
-  disabled,
+  onValidate,
+  onChange
 }) {
-  const [values, setValues] = useState([]);
+  const [value, setValue] = useState("");
+  const [invalid, setInvalid] = useState("");
 
   useEffect(() => {
-    setValues(setInputValue ? setInputValue : []);
+    setInvalid(error);
+  }, [error]);
+
+  useEffect(() => {
+    setValue(setInputValue);
   }, [setInputValue]);
 
   return (
-    <div
-      className={`
-          w-full relative bg-white py-2 px-3 border-b-[3px] border-gray-300 rounded-xl
-          ${disabled ? "opacity-60" : ""} 
-          ${className}
-      `}
-    >
+    <div>
       <label
         htmlFor={name}
-        className={`
-          z-10 text-base text-gray-400
-        `}
+        className="font-medium"
       >
         {label}
       </label>
+      <div
+        className={`
+                    w-full relative bg__background mt-1 py-3 2xl:py-4 px-5 border-[1px] border-gray-300 rounded-xl
+                    ${disabled ? "opacity-60" : ""} 
+                    ${className}`}
+      >
 
-      <div className='max-h-[180px] scroll_control overflow-y-auto pt-1'>
-        <div className={`flex gap-4`}>
-          {options &&
-            options.map((data, key) => {
+
+        <div className='max-h-[180px] scroll_control overflow-y-auto'>
+          <div
+            className={`flex gap-4`}>
+            {options && options.map((option, key) => {
               return (
                 <CheckBoxComponent
                   key={key}
-                  defaultChecked={values ? values.filter((val, _) => val == data.value)[0] : ""}
-                  name={data.value}
-                  label={data.label}
+                  label={option.label}
+                  value={option.value}
+                  id={name + "_" + key}
+                  name={name}
+                  checked={value == option.value}
                   onChange={(e) => {
-                    if (values.filter((val, _) => val == data.value)[0]) {
-                      setValues([
-                        ...values.filter((val, _) => val != data.value),
-                      ]);
-
-                      if (onChange) {
-                        onChange([
-                          ...values.filter((val, _) => val != data.value),
-                        ]);
-                      }
-
-                    } else {
-                      setValues([
-                        ...values.filter((val, _) => val != data.value),
-                        data.value,
-                      ]);
-
-                      if (onChange) {
-                        onChange([
-                          ...values.filter((val, _) => val != data.value),
-                          data.value,
-                        ]);
-                      }
+                    setValue(option.value)
+                    setInvalid(false)
+                    if (onChange) {
+                      onChange(option.value)
                     }
                   }}
                 />
-              );
+              )
             })}
+          </div>
         </div>
+
+        {invalid && (
+          <small className='block px-2 pl-5 -bottom-6 text-sm text-left text__danger absolute'>
+            {invalid}
+          </small>
+        )}
       </div>
     </div>
-  );
+  )
 }
