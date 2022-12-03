@@ -8,11 +8,21 @@ export default function TableCrudComponent({
     urlPath,
     searchColumn,
     exceptColumns,
+    customColumn,
+    changeColumns,
+    includeColumns,
     exceptSorts,
     exceptForms,
     includeForms,
     customForm,
     changeForm,
+    customUpdateValue,
+    customTopBar,
+    setToRefresh,
+    setToLoading,
+    customAction,
+    exceptAction,
+    includeAction
 }) {
     const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -64,22 +74,34 @@ export default function TableCrudComponent({
                 let newColumns = [];
                 let newData = [];
 
-                Object.keys(responseData.at(0)).map((keyName) => {
-                    if ((!exceptColumns || !exceptColumns.includes(keyName))) {
-                        newColumns.push({
-                            label: keyName.charAt(0).toUpperCase() + keyName.slice(1),
-                            selector: keyName,
-                            width: "200px",
-                            sortable: (!exceptSorts || !exceptSorts.includes(keyName))
+                if (!customColumn) {
+                    Object.keys(responseData.at(0)).map((keyName) => {
+                        if ((!exceptColumns || !exceptColumns.includes(keyName))) {
+                            newColumns.push({
+                                label: keyName.charAt(0).toUpperCase() + keyName.slice(1),
+                                selector: keyName,
+                                width: "200px",
+                                sortable: (!exceptSorts || !exceptSorts.includes(keyName))
+                            });
+                        }
+
+                    })
+
+                    if (response.data.filters) {
+                        Object.keys(response.data.filters).map((keyName) => {
+                            newColumns.filter((col) => col.selector == keyName).at(0).filters = response.data.filters[keyName]
                         });
                     }
-
-                })
-
-                if (response.data.filters) {
-                    Object.keys(response.data.filters).map((keyName) => {
-                        newColumns.filter((col) => col.selector == keyName).at(0).filters = response.data.filters[keyName]
-                    });
+                } else {
+                    customColumn.map((column, key) => {
+                        newColumns.push({
+                            label: column.label,
+                            selector: column.selector,
+                            width: column.width ? column.width : "200px",
+                            sortable: column.sortable,
+                            filters: column.filters,
+                        });
+                    })
                 }
 
                 if (response.data.total_row) {
@@ -115,46 +137,96 @@ export default function TableCrudComponent({
                 setColumns(newColumns)
 
                 responseData.map((item, key) => {
+                    let items = item;
+
+                    if (customColumn) {
+                        let newItems = {};
+                        customColumn.map((column, col_key) => {
+                            newItems[column.selector] = column.item(item)
+                        })
+
+                        items = newItems;
+                    }
+
+                    Object.keys(items).map((keyName) => {
+                        const mappingIncludeColumns = includeColumns && includeColumns.filter((newCol) => newCol.before && newCol.before == keyName);
+
+                        mappingIncludeColumns && mappingIncludeColumns.map((includeColumn, includeKey) => {
+                            if (includeColumn && includeColumn.selector) {
+                                items[includeColumn.selector] = includeColumn.item ? includeColumn.item(originalData[key]) : null
+                            }
+                        })
+
+
+                        if (changeColumns && changeColumns[keyName]?.custom) {
+                            items[keyName] = changeColumns[keyName].custom(originalData[key]);
+
+                            if (originalData[key][keyName] && !includeColumns?.filter((newCol) => newCol.selector == keyName)[0] && (typeof originalData[key][keyName] === 'object' || Array.isArray(originalData[key][keyName]))) {
+                                items[keyName] = JSON.stringify(items[keyName])
+                            }
+                        }
+                    });
+
                     newData.push({
-                        ...item,
-                        action: (
+                        ...items,
+                        action: customAction ? customAction(originalData[key], {
+                            setModalView: (e) => setModalView(e),
+                            setDataSelected: (e) => setDataSelected(e),
+                            setModalForm: (e) => setModalForm(e),
+                            setModalDelete: (e) => setModalDelete(e)
+                        }) : (
                             <>
-                                <ButtonComponent
-                                    icon={faEye}
-                                    label={"View"}
-                                    bg="light__secondary"
-                                    color="secondary"
-                                    size={"sm"}
-                                    rounded
-                                    onClick={() => {
-                                        setModalView(true)
-                                        setDataSelected(key)
-                                    }}
-                                />
-                                <ButtonComponent
-                                    icon={faEdit}
-                                    label={"Edit"}
-                                    bg="light__warning"
-                                    color="warning"
-                                    size={"sm"}
-                                    rounded
-                                    onClick={() => {
-                                        setModalForm(true)
-                                        setDataSelected(key)
-                                    }}
-                                />
-                                <ButtonComponent
-                                    icon={faTrash}
-                                    label={"Delete"}
-                                    bg="light__danger"
-                                    color="danger"
-                                    size={"sm"}
-                                    rounded
-                                    onClick={() => {
-                                        setModalDelete(true)
-                                        setDataSelected(key)
-                                    }}
-                                />
+                                {includeAction && includeAction(originalData[key], {
+                                    setModalView: (e) => setModalView(e),
+                                    setDataSelected: (e) => setDataSelected(e),
+                                    setModalForm: (e) => setModalForm(e),
+                                    setModalDelete: (e) => setModalDelete(e)
+                                })}
+
+                                {(!exceptAction || !exceptAction.includes('detail')) && (
+                                    <ButtonComponent
+                                        icon={faEye}
+                                        label={"Detail"}
+                                        border="background"
+                                        color="primary"
+                                        size={"sm"}
+                                        rounded
+                                        onClick={() => {
+                                            setModalView(true)
+                                            setDataSelected(key)
+                                        }}
+                                    />
+                                )}
+
+                                {(!exceptAction || !exceptAction.includes('edit')) && (
+                                    <ButtonComponent
+                                        icon={faEdit}
+                                        label={"Ubah"}
+                                        border="background"
+                                        color="warning"
+                                        size={"sm"}
+                                        rounded
+                                        onClick={() => {
+                                            setModalForm(true)
+                                            setDataSelected(key)
+                                        }}
+                                    />
+                                )}
+
+                                {(!exceptAction || !exceptAction.includes('delete')) && (
+                                    <ButtonComponent
+                                        icon={faTrash}
+                                        label={"Hapus"}
+                                        border="background"
+                                        color="danger"
+                                        size={"sm"}
+                                        rounded
+                                        onClick={() => {
+                                            setModalDelete(true)
+                                            setDataSelected(key)
+                                        }}
+                                    />
+                                )}
                             </>
                         )
                     })
@@ -193,7 +265,11 @@ export default function TableCrudComponent({
             }, 1000);
         }
 
-    }, [paginate, page, sort, search, filter, refresh]);
+    }, [paginate, page, sort, search, filter, refresh, setToLoading]);
+
+    useEffect(() => {
+        setRefresh(!refresh)
+    }, [setToRefresh]);
 
     // useEffect(() => {
     //     if (forms && forms[0] && changeForm) {
@@ -214,7 +290,7 @@ export default function TableCrudComponent({
 
                 {!isError ? (
                     <TableComponent
-                        topBar={(
+                        topBar={customTopBar ? customTopBar : (
                             <>
                                 <ButtonComponent
                                     bg="primary"
@@ -269,7 +345,7 @@ export default function TableCrudComponent({
                     method={dataSelected === false ? "post" : "put"}
                     confirmation
                     forms={forms}
-                    defaultValue={dataSelected === false ? null : data?.at(dataSelected)}
+                    defaultValue={dataSelected === false ? null : customUpdateValue ? customUpdateValue(dataOriginals?.at(dataSelected)) : dataOriginals?.at(dataSelected)}
                     onSuccess={() => {
                         setModalForm(false)
                         setRefresh(!refresh)
